@@ -6,18 +6,26 @@ import PackageDescription
 let package = Package(
     name: "Capriccio",
     products: [
+        .library(
+            name: "CapriccioLib",
+            targets: ["CapriccioLib"]),
         .executable(
             name: "Capriccio",
             targets: ["Capriccio"])
     ],
     dependencies: [
+        .package(url: "https://github.com/Quick/Nimble", from: "7.2.0"),
+        .package(url: "https://github.com/f-meloni/TestSpy", .branch("master"))
     ],
     targets: [
         .target(
-            name: "Capriccio",
+            name: "CapriccioLib",
             dependencies: []),
+        .target(
+            name: "Capriccio",
+            dependencies: ["CapriccioLib"]),
         .testTarget(
-            name: "CapriccioTests",
-            dependencies: ["Capriccio"]),
+            name: "CapriccioLibTests",
+            dependencies: ["CapriccioLib", "Nimble", "TestSpy"])
     ]
 )

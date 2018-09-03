@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble",
+        "state": {
+          "branch": null,
+          "revision": "d91327fda5b609b12ea2247260b3680449954d32",
+          "version": "7.2.0"
+        }
+      },
+      {
+        "package": "Quick",
+        "repositoryURL": "https://github.com/Quick/Quick",
+        "state": {
+          "branch": null,
+          "revision": "b060679e70d13c3c7dcd124201b5b1b34ce6f340",
+          "version": "1.3.1"
+        }
+      },
+      {
+        "package": "TestSpy",
+        "repositoryURL": "https://github.com/f-meloni/TestSpy",
+        "state": {
+          "branch": "master",
+          "revision": "89744c399f8c9484ea8e80b726ebd621d6a0f019",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
