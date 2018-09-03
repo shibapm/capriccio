@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Consumer",
+        "repositoryURL": "https://github.com/nicklockwood/Consumer.git",
+        "state": {
+          "branch": null,
+          "revision": "edd5f97cded19baca7bb47867abc0ab736ac7481",
+          "version": "0.3.4"
+        }
+      },
+      {
         "package": "Nimble",
         "repositoryURL": "https://github.com/Quick/Nimble",
         "state": {
@@ -17,6 +26,15 @@
           "branch": null,
           "revision": "b060679e70d13c3c7dcd124201b5b1b34ce6f340",
           "version": "1.3.1"
+        }
+      },
+      {
+        "package": "Gherkin",
+        "repositoryURL": "https://github.com/f-meloni/SwiftGherkin",
+        "state": {
+          "branch": "tags_support",
+          "revision": "7f245e0b2e8a79b28c0ba030b0e74e37eb669204",
+          "version": null
         }
       },
       {
