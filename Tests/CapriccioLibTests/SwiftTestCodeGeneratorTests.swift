@@ -12,7 +12,6 @@ import Gherkin
 @testable import CapriccioLib
 
 final class SwiftTestCodeGeneratorTests: XCTestCase {
-    
     var swiftCodeGenerator: SwiftTestCodeGenerator!
     
     override func setUp() {
@@ -87,6 +86,44 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
                 When("Something different happens")
                 Then("Something else happens")
             }
+        }
+        """
+        
+        fileGenerationCheck(feature: feature, expectedResult: expectedResult)
+    }
+    
+    func testItGeneratesTheCorrectCodeWithAOutlineFeature() {
+        let examples = [Example(values: ["key1": "value1", "key2": "value2"]),
+                        Example(values: ["key1": "value3", "key2": "value4"]),]
+    
+        let scenario: Scenario = .outline(ScenarioOutline(tags: [],
+                                                        name: "Scenario I want to test",
+                                                        description: "",
+                                                        steps:[Step(name: .given, text: "I'm in a situation"),
+                                                               Step(name: .when, text: "Something happens <key1>"),
+                                                               Step(name: .then, text: "Something else happens <key2>")],
+                                                        examples: examples))
+        let feature = Feature(name: "Feature number one",
+                              description: "",
+                              scenarios: [scenario])
+        
+        let expectedResult = """
+        import XCTest
+        import XCTest_Gherkin
+
+        final class FeatureNumberOne {
+                func scenarioIWantToTestWithvalue2Andvalue1 {
+                    Given("I'm in a situation")
+                    When("Something happens value1")
+                    Then("Something else happens value2")
+        
+                }
+        
+                func scenarioIWantToTestWithvalue4Andvalue3 {
+                    Given("I'm in a situation")
+                    When("Something happens value3")
+                    Then("Something else happens value4")
+                }
         }
         """
         
