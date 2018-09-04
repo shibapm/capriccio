@@ -22,6 +22,9 @@ final class SwiftTestCodeGenerator {
     
     /// Simple way of embedding the template given SPM doesn't support resources files yet
     let templateString = """
+    import XCTest
+    import XCTest_Gherkin
+
     final class {{ feature.className }} {
         {% for scenario in feature.scenarios %}
         {% if scenario.examples.count > 0 %}

@@ -37,6 +37,9 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
                               scenarios: [scenario])
         
         let expectedResult = """
+        import XCTest
+        import XCTest_Gherkin
+
         final class FeatureNumberOne {
             func scenarioIWantToTest {
                 Given("I'm in a situation")
@@ -46,6 +49,51 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
         }
         """
         
+        fileGenerationCheck(feature: feature, expectedResult: expectedResult)
+    }
+    
+    func testItGeneratesTheCorrectCodeWithAMoreComplexFeature() {
+        let scenario: Scenario = .simple(ScenarioSimple(tags: [],
+                                                        name: "Scenario I want to test",
+                                                        description: "",
+                                                        steps:[Step(name: .given, text: "I'm in a situation"),
+                                                               Step(name: .when, text: "Something happens"),
+                                                               Step(name: .then, text: "Something else happens")] ))
+        
+        let scenario2: Scenario = .simple(ScenarioSimple(tags: [],
+                                                        name: "Other scenario I want to test",
+                                                        description: "",
+                                                        steps:[Step(name: .given, text: "I'm in another situation"),
+                                                               Step(name: .when, text: "Something different happens"),
+                                                               Step(name: .then, text: "Something else happens")] ))
+        
+        let feature = Feature(name: "Feature number one",
+                              description: "",
+                              scenarios: [scenario, scenario2])
+        
+        let expectedResult = """
+        import XCTest
+        import XCTest_Gherkin
+
+        final class FeatureNumberOne {
+            func scenarioIWantToTest {
+                Given("I'm in a situation")
+                When("Something happens")
+                Then("Something else happens")
+            }
+
+            func otherScenarioIWantToTest {
+                Given("I'm in another situation")
+                When("Something different happens")
+                Then("Something else happens")
+            }
+        }
+        """
+        
+        fileGenerationCheck(feature: feature, expectedResult: expectedResult)
+    }
+    
+    private func fileGenerationCheck(feature: Feature, expectedResult: String) {
         let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature)
         
         expect(self.splittedAndTrimmedStringToTest(fromString: expectedResult)) == splittedAndTrimmedStringToTest(fromString: text)
