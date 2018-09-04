@@ -15,13 +15,14 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/f-meloni/SwiftGherkin", .branch("tags_support")),
+        .package(url: "https://github.com/stencilproject/Stencil", from: "0.12.1"),
         .package(url: "https://github.com/Quick/Nimble", from: "7.2.0"),
         .package(url: "https://github.com/f-meloni/TestSpy", .branch("master"))
     ],
     targets: [
         .target(
             name: "CapriccioLib",
-            dependencies: ["Gherkin"]),
+            dependencies: ["Gherkin", "Stencil"]),
         .target(
             name: "Capriccio",
             dependencies: ["CapriccioLib"]),
