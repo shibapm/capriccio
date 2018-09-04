@@ -86,17 +86,3 @@ extension Example {
                 "methodNameExamplePart": methodNameExamplePart]
     }
 }
-
-
-fileprivate extension String {
-    fileprivate func camelCased(upper: Bool) -> String {
-        let words = self.split(separator: " ")
-        return words.map { word in
-            if !upper && word == words[0] {
-                return word.lowercased()
-            } else {
-                return word.capitalized
-            }
-        }.joined()
-    }
-}
