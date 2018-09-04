@@ -76,7 +76,7 @@ extension Example {
                 result += "And"
             }
             
-            result += value
+            result += value.capitalized
             return result
         }
     }

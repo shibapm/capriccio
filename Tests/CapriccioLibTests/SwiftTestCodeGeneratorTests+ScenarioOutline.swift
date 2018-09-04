@@ -31,14 +31,14 @@ extension SwiftTestCodeGeneratorTests {
         import XCTest_Gherkin
 
         final class FeatureNumberOne {
-                func scenarioIWantToTestWithvalue2Andvalue1 {
+                func scenarioIWantToTestWithValue2AndValue1 {
                     Given("I'm in a situation")
                     When("Something happens value1")
                     Then("Something else happens value2")
         
                 }
         
-                func scenarioIWantToTestWithvalue4Andvalue3 {
+                func scenarioIWantToTestWithValue4AndValue3 {
                     Given("I'm in a situation")
                     When("Something happens value3")
                     Then("Something else happens value4")
@@ -81,25 +81,25 @@ extension SwiftTestCodeGeneratorTests {
         import XCTest_Gherkin
 
         final class FeatureNumberOne {
-                func scenarioIWantToTestWithvalue2Andvalue1 {
+                func scenarioIWantToTestWithValue2AndValue1 {
                     Given("I'm in a situation")
                     When("Something happens value1")
                     Then("Something else happens value2")
                 }
         
-                func scenarioIWantToTestWithvalue4Andvalue3 {
+                func scenarioIWantToTestWithValue4AndValue3 {
                     Given("I'm in a situation")
                     When("Something happens value3")
                     Then("Something else happens value4")
                 }
 
-                func otherScenarioIWantToTestWithvalue6Andvalue5 {
+                func otherScenarioIWantToTestWithValue6AndValue5 {
                     Given("I'm in another situation")
                     When("Something different happens value6")
                     Then("Something else happens value5")
                 }
         
-                func otherScenarioIWantToTestWithvalue8Andvalue7 {
+                func otherScenarioIWantToTestWithValue8AndValue7 {
                     Given("I'm in another situation")
                     When("Something different happens value8")
                     Then("Something else happens value7")
