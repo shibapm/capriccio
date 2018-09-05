@@ -25,8 +25,7 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
     }
     
     func testItGeneratesTheCorrectCodeWithASimpleFeature() {
-        let scenario: Scenario = .simple(ScenarioSimple(tags: [],
-                                                        name: "Scenario I want to test",
+        let scenario: Scenario = .simple(ScenarioSimple(name: "Scenario I want to test",
                                                         description: "",
                                                         steps:[Step(name: .given, text: "I'm in a situation"),
                                                                Step(name: .when, text: "Something happens"),
@@ -52,15 +51,13 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
     }
     
     func testItGeneratesTheCorrectCodeWithAMoreComplexFeature() {
-        let scenario: Scenario = .simple(ScenarioSimple(tags: [],
-                                                        name: "Scenario I want to test",
+        let scenario: Scenario = .simple(ScenarioSimple(name: "Scenario I want to test",
                                                         description: "",
                                                         steps:[Step(name: .given, text: "I'm in a situation"),
                                                                Step(name: .when, text: "Something happens"),
                                                                Step(name: .then, text: "Something else happens")] ))
         
-        let scenario2: Scenario = .simple(ScenarioSimple(tags: [],
-                                                        name: "Other scenario I want to test",
+        let scenario2: Scenario = .simple(ScenarioSimple(name: "Other scenario I want to test",
                                                         description: "",
                                                         steps:[Step(name: .given, text: "I'm in another situation"),
                                                                Step(name: .when, text: "Something different happens"),

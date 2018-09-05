@@ -15,8 +15,7 @@ extension SwiftTestCodeGeneratorTests {
         let examples = [Example(values: ["key1": "value1", "key2": "value2"]),
                         Example(values: ["key1": "value3", "key2": "value4"])]
         
-        let scenario: Scenario = .outline(ScenarioOutline(tags: [],
-                                                          name: "Scenario I want to test",
+        let scenario: Scenario = .outline(ScenarioOutline(name: "Scenario I want to test",
                                                           description: "",
                                                           steps:[Step(name: .given, text: "I'm in a situation"),
                                                                  Step(name: .when, text: "Something happens <key1>"),
@@ -53,8 +52,7 @@ extension SwiftTestCodeGeneratorTests {
         let examples = [Example(values: ["key1": "value1", "key2": "value2"]),
                         Example(values: ["key1": "value3", "key2": "value4"])]
         
-        let scenario: Scenario = .outline(ScenarioOutline(tags: [],
-                                                          name: "Scenario I want to test",
+        let scenario: Scenario = .outline(ScenarioOutline(name: "Scenario I want to test",
                                                           description: "",
                                                           steps:[Step(name: .given, text: "I'm in a situation"),
                                                                  Step(name: .when, text: "Something happens <key1>"),
@@ -64,8 +62,7 @@ extension SwiftTestCodeGeneratorTests {
         let examples2 = [Example(values: ["key3": "value5", "key4": "value6"]),
                         Example(values: ["key3": "value7", "key4": "value8"])]
         
-        let scenario2: Scenario = .outline(ScenarioOutline(tags: [],
-                                                          name: "Other scenario I want to test",
+        let scenario2: Scenario = .outline(ScenarioOutline(name: "Other scenario I want to test",
                                                           description: "",
                                                           steps:[Step(name: .given, text: "I'm in another situation"),
                                                                  Step(name: .when, text: "Something different happens <key4>"),
@@ -114,8 +111,7 @@ extension SwiftTestCodeGeneratorTests {
         let examples = [Example(values: ["key1": "value1", "key2": "text with spaces, commas and dots."]),
                         Example(values: ["key1": "another - really % complex @ text", "key2": "value4"])]
         
-        let scenario: Scenario = .outline(ScenarioOutline(tags: [],
-                                                          name: "Scenario I want to test",
+        let scenario: Scenario = .outline(ScenarioOutline(name: "Scenario I want to test",
                                                           description: "",
                                                           steps:[Step(name: .given, text: "I'm in a situation"),
                                                                  Step(name: .when, text: "Something happens <key1>"),

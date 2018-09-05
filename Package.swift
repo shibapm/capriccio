@@ -14,7 +14,7 @@ let package = Package(
             targets: ["Capriccio"])
     ],
     dependencies: [
-        .package(url: "https://github.com/f-meloni/SwiftGherkin", .branch("tags_support")),
+        .package(url: "https://github.com/f-meloni/SwiftGherkin", .branch("gherkin_indentation")),
         .package(url: "https://github.com/stencilproject/Stencil", from: "0.12.1"),
         .package(url: "https://github.com/Quick/Nimble", from: "7.2.0"),
         .package(url: "https://github.com/f-meloni/TestSpy", .branch("master")),

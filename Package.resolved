@@ -68,8 +68,8 @@
         "package": "Gherkin",
         "repositoryURL": "https://github.com/f-meloni/SwiftGherkin",
         "state": {
-          "branch": "tags_support",
-          "revision": "7f245e0b2e8a79b28c0ba030b0e74e37eb669204",
+          "branch": "gherkin_indentation",
+          "revision": "5899421546cc38477c62d9aa69b13d140ee8af2c",
           "version": null
         }
       },
