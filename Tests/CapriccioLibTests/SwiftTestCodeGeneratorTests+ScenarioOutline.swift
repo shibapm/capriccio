@@ -11,7 +11,7 @@ import Gherkin
 @testable import CapriccioLib
 
 extension SwiftTestCodeGeneratorTests {
-    func testItGeneratesTheCorrectCodeWithAOutlineFeature() {
+    func testItGeneratesTheCorrectCodeWithAnOutlineScenario() {
         let examples = [Example(values: ["key1": "value1", "key2": "value2"]),
                         Example(values: ["key1": "value3", "key2": "value4"])]
         
@@ -49,7 +49,7 @@ extension SwiftTestCodeGeneratorTests {
         fileGenerationCheck(feature: feature, expectedResult: expectedResult)
     }
     
-    func testItGeneratesTheCorrectCodeWithMultipleOutlineFeatures() {
+    func testItGeneratesTheCorrectCodeWithMultipleOutlineScenarios() {
         let examples = [Example(values: ["key1": "value1", "key2": "value2"]),
                         Example(values: ["key1": "value3", "key2": "value4"])]
         
