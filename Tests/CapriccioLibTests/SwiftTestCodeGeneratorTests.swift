@@ -40,7 +40,7 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
         import XCTest_Gherkin
 
         final class FeatureNumberOne {
-            func testScenarioIWantToTest {
+            func testScenarioIWantToTest() {
                 Given("I'm in a situation")
                 When("Something happens")
                 Then("Something else happens")
@@ -75,13 +75,13 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
         import XCTest_Gherkin
 
         final class FeatureNumberOne {
-            func testScenarioIWantToTest {
+            func testScenarioIWantToTest() {
                 Given("I'm in a situation")
                 When("Something happens")
                 Then("Something else happens")
             }
 
-            func testOtherScenarioIWantToTest {
+            func testOtherScenarioIWantToTest() {
                 Given("I'm in another situation")
                 When("Something different happens")
                 Then("Something else happens")
