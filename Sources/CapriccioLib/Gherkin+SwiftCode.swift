@@ -76,7 +76,11 @@ extension Example {
                 result += "And"
             }
             
-            result += value.replacingOccurrences(of: ".", with: "").replacingOccurrences(of: ",", with: "").camelCased(upper: true)
+            func replaceNotUsableCharacters(onString string: String) -> String {
+                return string.replacingOccurrences(of: "([^A-Za-z0-9 ]*)", with: "", options:.regularExpression)
+            }
+            
+            result += replaceNotUsableCharacters(onString: value).camelCased(upper: true)
             return result
         }
     }

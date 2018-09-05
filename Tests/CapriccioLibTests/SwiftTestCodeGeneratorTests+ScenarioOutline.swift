@@ -112,7 +112,7 @@ extension SwiftTestCodeGeneratorTests {
     
     func testItGeneratesTheCorrectCodeWithAnOutlineScenarioAndComplexExamples() {
         let examples = [Example(values: ["key1": "value1", "key2": "text with spaces, commas and dots."]),
-                        Example(values: ["key1": "another text with spaces, commas and dots.", "key2": "value4"])]
+                        Example(values: ["key1": "another - really % complex @ text", "key2": "value4"])]
         
         let scenario: Scenario = .outline(ScenarioOutline(tags: [],
                                                           name: "Scenario I want to test",
@@ -137,9 +137,9 @@ extension SwiftTestCodeGeneratorTests {
                     Then("Something else happens text with spaces, commas and dots.")
                 }
         
-                func testScenarioIWantToTestWithValue4AndAnotherTextWithSpacesCommasAndDots() {
+                func testScenarioIWantToTestWithValue4AndAnotherReallyComplexText() {
                     Given("I'm in a situation")
-                    When("Something happens another text with spaces, commas and dots.")
+                    When("Something happens another - really % complex @ text")
                     Then("Something else happens value4")
                 }
         }
