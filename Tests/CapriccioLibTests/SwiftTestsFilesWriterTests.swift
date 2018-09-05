@@ -9,6 +9,7 @@ import XCTest
 import Foundation
 import Nimble
 import Gherkin
+import TestSpy
 @testable import CapriccioLib
 
 final class SwiftTestsFilesWriterTests: XCTestCase {
@@ -20,12 +21,14 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
     
     var generatedFilesPaths: [String]!
     
+    let testContent = "Test Code"
+    
     override func setUp() {
         super.setUp()
         generatedFilesPaths = []
         
         stubbedSwiftTestCodeGenerating = StubbedSwiftTestCodeGenerating()
-        stubbedSwiftTestCodeGenerating.result = "Code"
+        stubbedSwiftTestCodeGenerating.result = testContent
         swiftTestsFilesWriter = SwiftTestsFilesWriter(swiftCodeGenerator: stubbedSwiftTestCodeGenerating)
     }
     
@@ -46,8 +49,9 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
         let filePath = self.filePath(forFeature: feature)
         generatedFilesPaths?.append(filePath)
         
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature)))
         expect(FileManager.default.fileExists(atPath: filePath)) == true
-        expect(try? String(contentsOfFile: filePath)) == "Code"
+        expect(try? String(contentsOfFile: filePath)) == testContent
     }
     
     func testItWritesTheCorrectFileForMultipleFeatures() {
@@ -64,14 +68,16 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
         let filePath = self.filePath(forFeature: feature)
         generatedFilesPaths?.append(filePath)
         
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature)))
         expect(FileManager.default.fileExists(atPath: filePath)) == true
-        expect(try? String(contentsOfFile: filePath)) == "Code"
+        expect(try? String(contentsOfFile: filePath)) == testContent
         
         let file2Path = self.filePath(forFeature: feature2)
         generatedFilesPaths?.append(file2Path)
         
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature2)))
         expect(FileManager.default.fileExists(atPath: file2Path)) == true
-        expect(try? String(contentsOfFile: file2Path)) == "Code"
+        expect(try? String(contentsOfFile: file2Path)) == testContent
     }
     
     private func filePath(forFeature feature: Feature) -> String {
@@ -79,10 +85,23 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
     }
 }
 
-private class StubbedSwiftTestCodeGenerating: SwiftTestCodeGenerating {
+private class StubbedSwiftTestCodeGenerating: SwiftTestCodeGenerating, TestSpy  {
     var result: String!
     
+    enum Method: Equatable {
+        case generateSwiftTestCode(forFeature: Feature)
+    }
+    
+    var callstack = CallstackContainer<Method>()
+    
     func generateSwiftTestCode(forFeature feature: Feature) -> String {
+        callstack.record(.generateSwiftTestCode(forFeature: feature))
         return result
     }
+}
+
+extension Feature: Equatable { }
+
+public func == (lhs: Feature, rhs: Feature) -> Bool {
+    return lhs.name == rhs.name
 }
