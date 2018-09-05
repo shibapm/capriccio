@@ -20,7 +20,7 @@ extension Feature {
 
 extension Scenario {
     var methodName: String {
-        return name.camelCased(upper: false)
+        return name.camelCased(upper: true)
     }
     
     var dictionary: [String:Any] {

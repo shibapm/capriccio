@@ -36,14 +36,14 @@ final class {{ feature.className }} {
     {% for scenario in feature.scenarios %}
     {% if scenario.examples.count > 0 %}
     {% for i in 0...scenario.examplesCountForIteration %}
-    func {{ scenario.methodName }}With{{ scenario.examples[i].methodNameExamplePart }} {
+    func test{{ scenario.methodName }}With{{ scenario.examples[i].methodNameExamplePart }} {
         {% for step in scenario.examplesSteps[i] %}
         {{ step.swiftText }}
     {% endfor %}
     }
     {% endfor %}
     {% else %}
-    func {{ scenario.methodName }} {
+    func test{{ scenario.methodName }} {
         {% for step in scenario.steps%}
         {{ step.swiftText }}
         {% endfor %}
