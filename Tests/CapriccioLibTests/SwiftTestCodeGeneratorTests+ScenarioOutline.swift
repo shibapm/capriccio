@@ -30,7 +30,7 @@ extension SwiftTestCodeGeneratorTests {
         import XCTest
         import XCTest_Gherkin
 
-        final class FeatureNumberOne {
+        final class FeatureNumberOne: XCTestCase {
                 func testScenarioIWantToTestWithValue2AndValue1() {
                     Given("I'm in a situation")
                     When("Something happens value1")
@@ -80,7 +80,7 @@ extension SwiftTestCodeGeneratorTests {
         import XCTest
         import XCTest_Gherkin
 
-        final class FeatureNumberOne {
+        final class FeatureNumberOne: XCTestCase {
                 func testScenarioIWantToTestWithValue2AndValue1() {
                     Given("I'm in a situation")
                     When("Something happens value1")
@@ -130,7 +130,7 @@ extension SwiftTestCodeGeneratorTests {
         import XCTest
         import XCTest_Gherkin
 
-        final class FeatureNumberOne {
+        final class FeatureNumberOne: XCTestCase {
                 func testScenarioIWantToTestWithTextWithSpacesCommasAndDotsAndValue1() {
                     Given("I'm in a situation")
                     When("Something happens value1")

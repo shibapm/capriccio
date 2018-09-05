@@ -32,7 +32,7 @@ private let templateString = """
 import XCTest
 import XCTest_Gherkin
 
-final class {{ feature.className }} {
+final class {{ feature.className }}: XCTestCase {
     {% for scenario in feature.scenarios %}
     {% if scenario.examples.count > 0 %}
     {% for i in 0...scenario.examplesCountForIteration %}
