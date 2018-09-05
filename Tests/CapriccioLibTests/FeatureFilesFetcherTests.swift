@@ -35,23 +35,23 @@ final class FeatureFilesFetcherTests: XCTestCase {
     
     func testItReturnsTheFoundFeatureFiles() {
         let testPath = "testPath"
-        let featureFiles = ["/testPath/file1.feature",
-                            "/testPath/file2.feature",
-                            "/testPath/File3.feature"]
+        let featureFiles = ["file1.feature",
+                            "file2.feature",
+                            "file3.feature"]
         mockFileManager.contentOfDirectoryResult = featureFiles
         let result = featureFilesFetcher.featureFiles(atPath: testPath)
-        expect(result) == featureFiles
+        expect(result) == featureFiles.map { testPath + "/" + $0 }
     }
     
     func testItFiltersOutTheNotFeatureFiles() {
         let testPath = "testPath"
-        let featureFiles = ["/testPath/file1.feature",
-                            "/testPath/file2.feature",
-                            "/testPath/File3.feature"]
-        var files = ["/testPath/File4.jpg"]
+        let featureFiles = ["file1.feature",
+                            "file2.feature",
+                            "file3.feature"]
+        var files = ["/file4.jpg"]
         files.append(contentsOf: featureFiles)
         mockFileManager.contentOfDirectoryResult = files
         let result = featureFilesFetcher.featureFiles(atPath: testPath)
-        expect(result) == featureFiles
+        expect(result) == featureFiles.map { testPath + "/" + $0 }
     }
 }

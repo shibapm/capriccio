@@ -23,6 +23,6 @@ public final class FeatureFilesFetcher {
             fatalError("Unable to get files list at path \(path)")
         }
         
-        return directoryContents.filter { $0.hasSuffix(".feature") }
+        return directoryContents.filter { $0.hasSuffix(".feature") }.map { path + "/" + $0 }
     }
 }
