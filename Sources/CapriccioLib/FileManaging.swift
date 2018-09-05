@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol FileManaging {
+public protocol FileManaging {
     func contentsOfDirectory(atPath path: String) throws -> [String]
 }
 

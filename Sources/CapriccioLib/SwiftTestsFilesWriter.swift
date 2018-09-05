@@ -7,14 +7,14 @@
 
 import Gherkin
 
-final class SwiftTestsFilesWriter {
+public final class SwiftTestsFilesWriter {
     let swiftCodeGenerator: SwiftTestCodeGenerating
     
-    init(swiftCodeGenerator: SwiftTestCodeGenerating = SwiftTestCodeGenerator()) {
+    public init(swiftCodeGenerator: SwiftTestCodeGenerating = SwiftTestCodeGenerator()) {
         self.swiftCodeGenerator = swiftCodeGenerator
     }
     
-    func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String) {
+    public func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String) {
         features.forEach { feature in
             let code = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature)
             let featureFilePath = folderPath.appending("/" + feature.name.camelCased(upper: true) + ".swift")

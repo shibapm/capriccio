@@ -8,10 +8,12 @@
 import Foundation
 import Gherkin
 
-final class FeatureFilesReader {    
-    func readFiles(atPaths paths: [String], includedTags: [String]?, excludedTags: [String]?) -> [Feature] {
         let filesContent = paths.compactMap { try? String(contentsOfFile: $0) }
         let features = filesContent.compactMap { try? Feature($0) }
+public final class FeatureFilesReader {
+    public init() { }
+    
+    public func readFiles(atPaths paths: [String], includedTags: [String]?, excludedTags: [String]?) -> [Feature] {
         
         if includedTags != nil ||
             excludedTags != nil {

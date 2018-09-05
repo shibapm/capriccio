@@ -8,12 +8,14 @@
 import Gherkin
 import Stencil
 
-protocol SwiftTestCodeGenerating {
+public protocol SwiftTestCodeGenerating {
     func generateSwiftTestCode(forFeature feature: Feature) -> String
 }
 
-final class SwiftTestCodeGenerator: SwiftTestCodeGenerating {
-    func generateSwiftTestCode(forFeature feature: Feature) -> String {
+public final class SwiftTestCodeGenerator: SwiftTestCodeGenerating {
+    public init() { }
+    
+    public func generateSwiftTestCode(forFeature feature: Feature) -> String {
         let template = Template(templateString: templateString)
         
         do {

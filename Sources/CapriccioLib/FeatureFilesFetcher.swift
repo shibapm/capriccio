@@ -7,14 +7,14 @@
 
 import Foundation
 
-final class FeatureFilesFetcher {
+public final class FeatureFilesFetcher {
     private let fileManager: FileManaging
     
-    init(fileManager: FileManaging = FileManager.default) {
+    public init(fileManager: FileManaging = FileManager.default) {
         self.fileManager = fileManager
     }
     
-    func featureFiles(atPath path: String) -> [String] {
+    public func featureFiles(atPath path: String) -> [String] {
         let directoryContents: [String]
         
         do {
