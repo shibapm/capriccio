@@ -76,7 +76,7 @@ extension Example {
                 result += "And"
             }
             
-            result += value.capitalized
+            result += value.replacingOccurrences(of: ".", with: "").replacingOccurrences(of: ",", with: "").camelCased(upper: true)
             return result
         }
     }
