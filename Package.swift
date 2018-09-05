@@ -17,7 +17,8 @@ let package = Package(
         .package(url: "https://github.com/f-meloni/SwiftGherkin", .branch("tags_support")),
         .package(url: "https://github.com/stencilproject/Stencil", from: "0.12.1"),
         .package(url: "https://github.com/Quick/Nimble", from: "7.2.0"),
-        .package(url: "https://github.com/f-meloni/TestSpy", .branch("master"))
+        .package(url: "https://github.com/f-meloni/TestSpy", .branch("master")),
+        .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.1.0")
     ],
     targets: [
         .target(
@@ -25,7 +26,7 @@ let package = Package(
             dependencies: ["Gherkin", "Stencil"]),
         .target(
             name: "Capriccio",
-            dependencies: ["CapriccioLib"]),
+            dependencies: ["CapriccioLib", "Utility"]),
         .testTarget(
             name: "CapriccioLibTests",
             dependencies: ["CapriccioLib", "Nimble", "TestSpy"])
