@@ -58,6 +58,18 @@ final class FeatureFilesReaderTests: XCTestCase {
         expect(featureFiles[1].name) == "Test Scenario 3"
     }
     
+    func testItCanReadMultipleFeatureFilesWithdExcludedTags() {
+        write(fileContent: testFeatureFile1Content(), toPath: testFile1Path)
+        write(fileContent: testFeatureFile2Content(), toPath: testFile2Path)
+        write(fileContent: testFeatureFile3Content(), toPath: testFile3Path)
+        
+        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: nil, excludedTags: ["excluded"])
+        
+        expect(featureFiles.count) == 2
+        expect(featureFiles[0].name) == "Test Scenario"
+        expect(featureFiles[1].name) == "Test Scenario 2"
+    }
+    
     func testItCanReadMultipleFeatureFilesWithIncludedAndExcludedTags() {
         write(fileContent: testFeatureFile1Content(), toPath: testFile1Path)
         write(fileContent: testFeatureFile2Content(), toPath: testFile2Path)
