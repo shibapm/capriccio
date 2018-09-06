@@ -6,8 +6,9 @@
 //
 
 extension String {
-    func camelCased(upper: Bool) -> String {
-        let words = self.split(separator: " ")
+    func withoutNotAllowedCaractersAndCamelCased(upper: Bool) -> String {
+        let string = self.replacingOccurrences(of: "([^A-Za-z0-9 ]*)", with: "", options:.regularExpression)
+        let words = string.split(separator: " ")
         return words.map { word in
             if !upper && word == words[0] {
                 return word.lowercased()

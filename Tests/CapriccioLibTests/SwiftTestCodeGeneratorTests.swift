@@ -50,6 +50,32 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
         fileGenerationCheck(feature: feature, expectedResult: expectedResult)
     }
     
+    func testItRemovesNotAllowedCaracters() {
+        let scenario: Scenario = .simple(ScenarioSimple(name: "Scenario \\/ I want to test",
+                                                        description: "",
+                                                        steps:[Step(name: .given, text: "I'm in a situation"),
+                                                               Step(name: .when, text: "Something happens"),
+                                                               Step(name: .then, text: "Something else happens")] ))
+        let feature = Feature(name: "Feature $%^& number one",
+                              description: "",
+                              scenarios: [scenario])
+        
+        let expectedResult = """
+        import XCTest
+        import XCTest_Gherkin
+
+        final class FeatureNumberOne: XCTestCase {
+            func testScenarioIWantToTest() {
+                Given("I'm in a situation")
+                When("Something happens")
+                Then("Something else happens")
+            }
+        }
+        """
+        
+        fileGenerationCheck(feature: feature, expectedResult: expectedResult)
+    }
+    
     func testItGeneratesTheCorrectCodeWithAMoreComplexFeature() {
         let scenario: Scenario = .simple(ScenarioSimple(name: "Scenario I want to test",
                                                         description: "",

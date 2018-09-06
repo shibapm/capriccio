@@ -9,7 +9,7 @@ import Gherkin
 
 extension Feature {
     var className: String {
-        return name.camelCased(upper: true)
+        return name.withoutNotAllowedCaractersAndCamelCased(upper: true)
     }
     
     var dictionary: [String:Any] {
@@ -20,7 +20,7 @@ extension Feature {
 
 extension Scenario {
     var methodName: String {
-        return name.camelCased(upper: true)
+        return name.withoutNotAllowedCaractersAndCamelCased(upper: true)
     }
     
     var dictionary: [String:Any] {
@@ -75,12 +75,9 @@ extension Example {
             if !result.isEmpty {
                 result += "And"
             }
+
             
-            func replaceNotUsableCharacters(onString string: String) -> String {
-                return string.replacingOccurrences(of: "([^A-Za-z0-9 ]*)", with: "", options:.regularExpression)
-            }
-            
-            result += replaceNotUsableCharacters(onString: value).camelCased(upper: true)
+            result += value.withoutNotAllowedCaractersAndCamelCased(upper: true)
             return result
         }
     }

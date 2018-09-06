@@ -81,7 +81,7 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
     }
     
     private func filePath(forFeature feature: Feature) -> String {
-        return testFolder + "/" + feature.name.camelCased(upper: true) + ".swift"
+        return testFolder + "/" + feature.name.withoutNotAllowedCaractersAndCamelCased(upper: true) + ".swift"
     }
 }
 

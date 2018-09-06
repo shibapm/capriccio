@@ -17,11 +17,11 @@ public final class SwiftTestsFilesWriter {
     public func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String) {
         features.forEach { feature in
             let code = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature)
-            let featureFilePath = folderPath.appending("/" + feature.name.camelCased(upper: true) + ".swift")
+            let featureFilePath = folderPath.appending("/" + feature.name.withoutNotAllowedCaractersAndCamelCased(upper: true) + ".swift")
             do {
                 try code.write(toFile: featureFilePath, atomically: false, encoding: .utf8)
             } catch {
-                print("Unable to save the feature \"\(feature.name.camelCased(upper: true))\", error: \(error)")
+                print("Unable to save the feature \"\(feature.name.withoutNotAllowedCaractersAndCamelCased(upper: true))\", error: \(error)")
             }
         }
     }
