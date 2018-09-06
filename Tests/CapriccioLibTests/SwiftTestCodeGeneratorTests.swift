@@ -50,6 +50,32 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
         fileGenerationCheck(feature: feature, expectedResult: expectedResult)
     }
     
+    func testItUsesTheGeneratedClassType() {
+        let scenario: Scenario = .simple(ScenarioSimple(name: "Scenario I want to test",
+                                                        description: "",
+                                                        steps:[Step(name: .given, text: "I'm in a situation"),
+                                                               Step(name: .when, text: "Something happens"),
+                                                               Step(name: .then, text: "Something else happens")] ))
+        let feature = Feature(name: "Feature number one",
+                              description: "",
+                              scenarios: [scenario])
+        
+        let expectedResult = """
+        import XCTest
+        import XCTest_Gherkin
+
+        final class FeatureNumberOne: TestClass {
+            func testScenarioIWantToTest() {
+                Given("I'm in a situation")
+                When("Something happens")
+                Then("Something else happens")
+            }
+        }
+        """
+        
+        fileGenerationCheck(feature: feature, expectedResult: expectedResult, generatedClassType: "TestClass")
+    }
+    
     func testItRemovesNotAllowedCaracters() {
         let scenario: Scenario = .simple(ScenarioSimple(name: "Scenario \\/ I want to test",
                                                         description: "",
@@ -115,8 +141,8 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
         fileGenerationCheck(feature: feature, expectedResult: expectedResult)
     }
     
-    func fileGenerationCheck(feature: Feature, expectedResult: String) {
-        let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature)
+    func fileGenerationCheck(feature: Feature, expectedResult: String, generatedClassType: String? = nil) {
+        let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType)
         expect(self.splittedAndTrimmedStringToTest(fromString: expectedResult)) == splittedAndTrimmedStringToTest(fromString: text)
     }
     

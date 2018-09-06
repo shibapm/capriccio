@@ -9,17 +9,18 @@ import Gherkin
 import Stencil
 
 public protocol SwiftTestCodeGenerating {
-    func generateSwiftTestCode(forFeature feature: Feature) -> String
+    func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?) -> String
 }
 
 public final class SwiftTestCodeGenerator: SwiftTestCodeGenerating {
     public init() { }
     
-    public func generateSwiftTestCode(forFeature feature: Feature) -> String {
+    public func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?) -> String {
         let template = Template(templateString: templateString)
+        let generatedClassType = generatedClassType ?? "XCTestCase"
         
         do {
-            return try template.render(["feature": feature.dictionary])
+            return try template.render(["feature": feature.dictionary, "classType": generatedClassType])
         }
         catch {
             fatalError("Template file rendering failed with error \(error)")
@@ -32,7 +33,7 @@ private let templateString = """
 import XCTest
 import XCTest_Gherkin
 
-final class {{ feature.className }}: XCTestCase {
+final class {{ feature.className }}: {{ classType }} {
     {% for scenario in feature.scenarios %}
     {% if scenario.examples.count > 0 %}
     {% for i in 0...scenario.examplesCountForIteration %}

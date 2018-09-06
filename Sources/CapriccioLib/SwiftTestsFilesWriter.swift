@@ -14,9 +14,9 @@ public final class SwiftTestsFilesWriter {
         self.swiftCodeGenerator = swiftCodeGenerator
     }
     
-    public func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String) {
+    public func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String, generatedClassType: String?) {
         features.forEach { feature in
-            let code = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature)
+            let code = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType)
             let featureFilePath = folderPath.appending("/" + feature.name.withoutNotAllowedCaractersAndCamelCased(upper: true) + ".swift")
             do {
                 try code.write(toFile: featureFilePath, atomically: false, encoding: .utf8)
