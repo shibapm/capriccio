@@ -17,6 +17,7 @@ final class CapriccioArgumentsParser {
         
         let excludedTagsOption: OptionArgument<String> = parser.add(option: "--excluded-tags", shortName: "-e", kind: String.self, usage: "The list of excluded tags separated by a comma", completion: nil)
         let includedTagsOption: OptionArgument<String> = parser.add(option: "--included-tags", shortName: "-i", kind: String.self, usage: "The list of included tags separated by a comma", completion: nil)
+        let generatedClassTypeOption: OptionArgument<String> = parser.add(option: "--class-type", shortName: "-c", kind: String.self, usage: "The class type of the generated class [default value XCTestCase]", completion: nil)
         
         let parsedArguments = try? parser.parse(arguments)
         
@@ -30,7 +31,8 @@ final class CapriccioArgumentsParser {
         
         let excludedTags = parsedArguments?.get(excludedTagsOption)?.components(separatedBy: ",")
         let includedTags = parsedArguments?.get(includedTagsOption)?.components(separatedBy: ",")
+        let generatedClassType = parsedArguments?.get(generatedClassTypeOption)
         
-        return CapriccioArguments(source: source, destination: destination, excludedTags: excludedTags, includedTags: includedTags)
+        return CapriccioArguments(source: source, destination: destination, excludedTags: excludedTags, includedTags: includedTags, generatedClassType: generatedClassType)
     }
 }

@@ -10,4 +10,5 @@ struct CapriccioArguments {
     let destination: String
     let excludedTags: [String]?
     let includedTags: [String]?
+    let generatedClassType: String?
 }
