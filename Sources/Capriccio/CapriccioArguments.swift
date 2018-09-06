@@ -9,4 +9,5 @@ struct CapriccioArguments {
     let source: String
     let destination: String
     let excludedTags: [String]?
+    let includedTags: [String]?
 }

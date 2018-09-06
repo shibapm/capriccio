@@ -8,6 +8,7 @@
 import Foundation
 import Utility
 import CapriccioLib
+
 let argumets = CapriccioArgumentsParser.parseArguments()
 
 let source = argumets.source
@@ -17,7 +18,7 @@ let filesFetcher = FeatureFilesFetcher()
 let featureFiles = filesFetcher.featureFiles(atPath: source)
 
 let filesReader = FeatureFilesReader()
-let features = filesReader.readFiles(atPaths: featureFiles, includedTags: nil, excludedTags: nil)
+let features = filesReader.readFiles(atPaths: featureFiles, includedTags: argumets.includedTags, excludedTags: argumets.excludedTags)
 
 let filesWriter = SwiftTestsFilesWriter()
 filesWriter.writeSwiftTest(fromFeatures: features, inFolder: destination)

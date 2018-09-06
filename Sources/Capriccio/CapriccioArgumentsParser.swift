@@ -16,6 +16,7 @@ final class CapriccioArgumentsParser {
         let destinationArgument: PositionalArgument<String> = parser.add(positional: "destination", kind: String.self, usage: "The path to the folder where the swift files will be generated")
         
         let excludedTagsOption: OptionArgument<String> = parser.add(option: "--excluded-tags", shortName: "-e", kind: String.self, usage: "The list of excluded tags separated by a comma", completion: nil)
+        let includedTagsOption: OptionArgument<String> = parser.add(option: "--included-tags", shortName: "-i", kind: String.self, usage: "The list of included tags separated by a comma", completion: nil)
         
         let parsedArguments = try? parser.parse(arguments)
         
@@ -28,7 +29,8 @@ final class CapriccioArgumentsParser {
         }
         
         let excludedTags = parsedArguments?.get(excludedTagsOption)?.components(separatedBy: ",")
+        let includedTags = parsedArguments?.get(includedTagsOption)?.components(separatedBy: ",")
         
-        return CapriccioArguments(source: source, destination: destination, excludedTags: excludedTags)
+        return CapriccioArguments(source: source, destination: destination, excludedTags: excludedTags, includedTags: includedTags)
     }
 }
