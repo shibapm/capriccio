@@ -111,7 +111,7 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
         generatedFilesPaths?.append(filePath)
         
         expect(FileManager.default.fileExists(atPath: filePath)) == true
-        expect(try? String(contentsOfFile: filePath)) == testContent + "\n" + testContent
+        expect(try? String(contentsOfFile: filePath)) == testContent + "\n\n" + testContent
     }
     
     private func filePath(forFeature feature: Feature) -> String {

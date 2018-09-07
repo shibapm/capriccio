@@ -29,7 +29,7 @@ public final class SwiftTestsFilesWriter {
     }
     
     private func writeSingleFile(fromFeaturesCode featuresCode: [String], folderPath: String) {
-        let singleFileCode = featuresCode.joined(separator: "\n")
+        let singleFileCode = featuresCode.joined(separator: "\n\n")
         let singleFilePath = folderPath.appending("/" + singleFileName)
         
         do {
