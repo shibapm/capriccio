@@ -128,6 +128,34 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
         fileGenerationCheck(feature: feature, expectedResult: expectedResult)
     }
     
+    func testItDisablesFileLenghtWarningWhenRequired() {
+        let scenario: Scenario = .simple(ScenarioSimple(name: "Scenario \\/ I want to test",
+                                                        description: "",
+                                                        steps:[Step(name: .given, text: "I'm in a situation"),
+                                                               Step(name: .when, text: "Something happens"),
+                                                               Step(name: .but, text: "Something else happens")] ))
+        let feature = Feature(name: "Feature $%^& number one",
+                              description: "",
+                              scenarios: [scenario])
+        
+        let expectedResult = """
+        import XCTest
+        import XCTest_Gherkin
+
+        // swiftlint:disable file_length
+        final class FeatureNumberOne: XCTestCase {
+            func testScenarioIWantToTest() {
+                Given("I'm in a situation")
+                When("Something happens")
+                And("Something else happens")
+            }
+        }
+        // swiftlint:enable file_length
+        """
+        
+        fileGenerationCheck(feature: feature, expectedResult: expectedResult, disableFileLenghtWarning: true)
+    }
+    
     func testItGeneratesTheCorrectCodeWithAMoreComplexFeature() {
         let scenario: Scenario = .simple(ScenarioSimple(name: "Scenario I want to test",
                                                         description: "",
@@ -167,8 +195,8 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
         fileGenerationCheck(feature: feature, expectedResult: expectedResult)
     }
     
-    func fileGenerationCheck(feature: Feature, expectedResult: String, generatedClassType: String? = nil) {
-        let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType)
+    func fileGenerationCheck(feature: Feature, expectedResult: String, generatedClassType: String? = nil, disableFileLenghtWarning: Bool = false) {
+        let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType, disableFileLenghtWarning: disableFileLenghtWarning)
         expect(self.splittedAndTrimmedStringToTest(fromString: expectedResult)) == splittedAndTrimmedStringToTest(fromString: text)
     }
     

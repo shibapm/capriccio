@@ -46,13 +46,13 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
         
         let generatedClassType = "ClassType"
         
-        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature], inFolder: testFolder, generatedClassType: generatedClassType, useSingleFile: false)
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature], inFolder: testFolder, generatedClassType: generatedClassType, disableFileLenghtWarning: true, useSingleFile: false)
         
         let filePath = self.filePath(forFeature: feature)
         generatedFilesPaths?.append(filePath)
         
         
-        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType)))
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType, disableFileLenghtWarning: true)))
     }
     
     func testItWritesTheCorrectFileForAFeature() {
@@ -60,12 +60,12 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
                               description: "",
                               scenarios: [])
         
-        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature], inFolder: testFolder, generatedClassType: nil, useSingleFile: false)
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature], inFolder: testFolder, generatedClassType: nil,  disableFileLenghtWarning: true, useSingleFile: false)
         
         let filePath = self.filePath(forFeature: feature)
         generatedFilesPaths?.append(filePath)
         
-        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature, generatedClassType: nil)))
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature, generatedClassType: nil, disableFileLenghtWarning: true)))
         expect(FileManager.default.fileExists(atPath: filePath)) == true
         expect(try? String(contentsOfFile: filePath)) == testContent
     }
@@ -79,19 +79,19 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
                               description: "",
                               scenarios: [])
         
-        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature, feature2], inFolder: testFolder, generatedClassType: nil, useSingleFile: false)
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature, feature2], inFolder: testFolder, generatedClassType: nil, disableFileLenghtWarning: true, useSingleFile: false)
         
         let filePath = self.filePath(forFeature: feature)
         generatedFilesPaths?.append(filePath)
         
-        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature, generatedClassType: nil)))
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature, generatedClassType: nil, disableFileLenghtWarning: true)))
         expect(FileManager.default.fileExists(atPath: filePath)) == true
         expect(try? String(contentsOfFile: filePath)) == testContent
         
         let file2Path = self.filePath(forFeature: feature2)
         generatedFilesPaths?.append(file2Path)
         
-        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature2, generatedClassType: nil)))
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature2, generatedClassType: nil, disableFileLenghtWarning: true)))
         expect(FileManager.default.fileExists(atPath: file2Path)) == true
         expect(try? String(contentsOfFile: file2Path)) == testContent
     }
@@ -105,7 +105,7 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
                                description: "",
                                scenarios: [])
         
-        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature, feature2], inFolder: testFolder, generatedClassType: nil, useSingleFile: true)
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature, feature2], inFolder: testFolder, generatedClassType: nil, disableFileLenghtWarning: false, useSingleFile: true)
         
         let filePath = testFolder + "/FeaturesUITests.swift"
         generatedFilesPaths?.append(filePath)
@@ -123,13 +123,13 @@ private class StubbedSwiftTestCodeGenerating: SwiftTestCodeGenerating, TestSpy  
     var result: String!
     
     enum Method: Equatable {
-        case generateSwiftTestCode(forFeature: Feature, generatedClassType: String?)
+        case generateSwiftTestCode(forFeature: Feature, generatedClassType: String?, disableFileLenghtWarning: Bool)
     }
     
     var callstack = CallstackContainer<Method>()
     
-    func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?) -> String {
-        callstack.record(.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType))
+    func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?, disableFileLenghtWarning: Bool) -> String {
+        callstack.record(.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType, disableFileLenghtWarning: disableFileLenghtWarning))
         return result
     }
 }
