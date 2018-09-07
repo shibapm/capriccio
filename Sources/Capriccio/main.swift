@@ -21,6 +21,8 @@ let filesReader = FeatureFilesReader()
 let features = filesReader.readFiles(atPaths: featureFiles, includedTags: argumets.includedTags, excludedTags: argumets.excludedTags)
 
 let filesWriter = SwiftTestsFilesWriter()
-filesWriter.writeSwiftTest(fromFeatures: features, inFolder: destination, generatedClassType: argumets.generatedClassType)
+filesWriter.writeSwiftTest(fromFeatures: features, inFolder: destination, generatedClassType: argumets.generatedClassType, useSingleFile: argumets.useSingleFile)
 
-print("Generated \(features.count) \(features.count == 1 ? "file" : "files") at \(destination)")
+let filesCount = argumets.useSingleFile ? 1 : features.count
+
+print("Generated \(filesCount) \(filesCount == 1 ? "file" : "files") at \(destination)")

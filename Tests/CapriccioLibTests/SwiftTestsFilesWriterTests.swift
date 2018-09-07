@@ -46,7 +46,7 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
         
         let generatedClassType = "ClassType"
         
-        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature], inFolder: testFolder, generatedClassType: generatedClassType)
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature], inFolder: testFolder, generatedClassType: generatedClassType, useSingleFile: false)
         
         let filePath = self.filePath(forFeature: feature)
         generatedFilesPaths?.append(filePath)
@@ -60,7 +60,7 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
                               description: "",
                               scenarios: [])
         
-        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature], inFolder: testFolder, generatedClassType: nil)
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature], inFolder: testFolder, generatedClassType: nil, useSingleFile: false)
         
         let filePath = self.filePath(forFeature: feature)
         generatedFilesPaths?.append(filePath)
@@ -79,7 +79,7 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
                               description: "",
                               scenarios: [])
         
-        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature, feature2], inFolder: testFolder, generatedClassType: nil)
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature, feature2], inFolder: testFolder, generatedClassType: nil, useSingleFile: false)
         
         let filePath = self.filePath(forFeature: feature)
         generatedFilesPaths?.append(filePath)
@@ -94,6 +94,24 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
         expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature2, generatedClassType: nil)))
         expect(FileManager.default.fileExists(atPath: file2Path)) == true
         expect(try? String(contentsOfFile: file2Path)) == testContent
+    }
+    
+    func testItWritesTheCorrectFileForMultipleFeaturesOnSingleFile() {
+        let feature = Feature(name: "Feature number one",
+                              description: "",
+                              scenarios: [])
+        
+        let feature2 = Feature(name: "Feature number two",
+                               description: "",
+                               scenarios: [])
+        
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature, feature2], inFolder: testFolder, generatedClassType: nil, useSingleFile: true)
+        
+        let filePath = testFolder + "/FeaturesUITests.swift"
+        generatedFilesPaths?.append(filePath)
+        
+        expect(FileManager.default.fileExists(atPath: filePath)) == true
+        expect(try? String(contentsOfFile: filePath)) == testContent + "\n" + testContent
     }
     
     private func filePath(forFeature feature: Feature) -> String {

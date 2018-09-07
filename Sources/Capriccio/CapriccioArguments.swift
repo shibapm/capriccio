@@ -11,4 +11,5 @@ struct CapriccioArguments {
     let excludedTags: [String]?
     let includedTags: [String]?
     let generatedClassType: String?
+    let useSingleFile: Bool
 }
