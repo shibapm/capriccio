@@ -62,7 +62,17 @@ extension Step {
     }
     
     private func swiftText(fromText text: String) -> String {
-        return name.rawValue.capitalized + "(\"" + text + "\")"
+        return stepName + "(\"" + text + "\")"
+    }
+    
+    // But is not handled by XCTest_Gherkin. And is the closest stap name that we can use
+    private var stepName: String {
+        switch name {
+        case .but:
+            return "And"
+        default:
+            return name.rawValue.capitalized
+        }
     }
 }
 
