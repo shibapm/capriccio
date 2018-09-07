@@ -9,7 +9,7 @@ import Gherkin
 
 extension Feature {
     var className: String {
-        return name.withoutNotAllowedCaractersAndCamelCased(upper: true)
+        return name.validEntityName()
     }
     
     var dictionary: [String:Any] {
@@ -20,7 +20,7 @@ extension Feature {
 
 extension Scenario {
     var methodName: String {
-        return name.withoutNotAllowedCaractersAndCamelCased(upper: true)
+        return name.validEntityName()
     }
     
     var dictionary: [String:Any] {
@@ -87,7 +87,7 @@ extension Example {
             }
 
             
-            result += value.withoutNotAllowedCaractersAndCamelCased(upper: true)
+            result += value.validEntityName()
             return result
         }
     }

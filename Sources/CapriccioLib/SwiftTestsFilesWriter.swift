@@ -44,11 +44,11 @@ public final class SwiftTestsFilesWriter {
             let code = featuresCode[i]
             let feature = features[i]
             
-            let featureFilePath = folderPath.appending("/" + feature.name.withoutNotAllowedCaractersAndCamelCased(upper: true) + ".swift")
+            let featureFilePath = folderPath.appending("/" + feature.name.validEntityName() + ".swift")
             do {
                 try code.write(toFile: featureFilePath, atomically: false, encoding: .utf8)
             } catch {
-                print("Unable to save the feature \"\(feature.name.withoutNotAllowedCaractersAndCamelCased(upper: true))\", error: \(error)")
+                print("Unable to save the feature \"\(feature.name.validEntityName())\", error: \(error)")
             }
         }
     }

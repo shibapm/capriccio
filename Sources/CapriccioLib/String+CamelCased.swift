@@ -5,16 +5,27 @@
 //  Created by Franco on 04/09/2018.
 //
 
+enum ValidEntryNameStringType {
+    case `class`
+    case feature
+    case method
+    case example
+}
+
 extension String {
-    func withoutNotAllowedCaractersAndCamelCased(upper: Bool) -> String {
-        let string = self.replacingOccurrences(of: "([^A-Za-z0-9 ]*)", with: "", options:.regularExpression)
-        let words = string.split(separator: " ")
+    func validEntityName() -> String {
+        let result = removeNotValidCharacters()
+        return result.upperCamelCased
+    }
+    
+    func removeNotValidCharacters() -> String {
+        return replacingOccurrences(of: "([^A-Za-z0-9 ]*)", with: "", options:.regularExpression)
+    }
+    
+    var upperCamelCased: String {
+        let words = split(separator: " ")
         return words.map { word in
-            if !upper && word == words[0] {
-                return word.lowercased()
-            } else {
-                return word.capitalized
-            }
-            }.joined()
+            return word.capitalized
+        }.joined()
     }
 }
