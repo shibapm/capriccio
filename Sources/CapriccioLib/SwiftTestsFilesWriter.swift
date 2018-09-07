@@ -16,9 +16,9 @@ public final class SwiftTestsFilesWriter {
         self.swiftCodeGenerator = swiftCodeGenerator
     }
     
-    public func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String, generatedClassType: String?, disableFileLenghtWarning: Bool, useSingleFile: Bool) {
+    public func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String, generatedClassType: String?, disableSwiftLint: Bool, useSingleFile: Bool) {
         
-        let featuresCode = features.map { swiftCodeGenerator.generateSwiftTestCode(forFeature: $0, generatedClassType: generatedClassType, disableFileLenghtWarning: disableFileLenghtWarning) }
+        let featuresCode = features.map { swiftCodeGenerator.generateSwiftTestCode(forFeature: $0, generatedClassType: generatedClassType, disableSwiftLint: disableSwiftLint) }
         
         if useSingleFile {
             writeSingleFile(fromFeaturesCode: featuresCode, folderPath: folderPath)

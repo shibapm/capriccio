@@ -21,7 +21,7 @@ let filesReader = FeatureFilesReader()
 let features = filesReader.readFiles(atPaths: featureFiles, includedTags: argumets.includedTags, excludedTags: argumets.excludedTags)
 
 let filesWriter = SwiftTestsFilesWriter()
-filesWriter.writeSwiftTest(fromFeatures: features, inFolder: destination, generatedClassType: argumets.generatedClassType, disableFileLenghtWarning: argumets.disableFileLenghtWarning, useSingleFile: argumets.useSingleFile)
+filesWriter.writeSwiftTest(fromFeatures: features, inFolder: destination, generatedClassType: argumets.generatedClassType, disableSwiftLint: argumets.disableSwiftLint, useSingleFile: argumets.useSingleFile)
 
 let filesCount = argumets.useSingleFile ? 1 : features.count
 

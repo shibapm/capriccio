@@ -25,7 +25,7 @@ final class CapriccioArgumentsParser {
         
         let useSingleFileOption = parser.add(option: "--single-file", shortName: "-s", kind: Bool.self, usage: "Generates a single swift file with the content of all the feature files", completion: nil)
         
-        let disableFileLenghtWarningOption = parser.add(option: "--no-filelength-warning", shortName: "-l", kind: Bool.self, usage: "Disables the swiftlint file_length warning", completion: nil)
+        let disableSwiftLintOption = parser.add(option: "--disable-swiflint", shortName: "-l", kind: Bool.self, usage: "Disables swiftlint on the file", completion: nil)
         
         let parsedArguments = try? parser.parse(arguments)
 
@@ -41,8 +41,8 @@ final class CapriccioArgumentsParser {
         let includedTags = parsedArguments?.get(includedTagsOption)?.components(separatedBy: ",")
         let generatedClassType = parsedArguments?.get(generatedClassTypeOption)
         let useSingleFile = parsedArguments?.get(useSingleFileOption) ?? false
-        let disableFileLenghtWarning = parsedArguments?.get(disableFileLenghtWarningOption) ?? false
+        let disableSwiftLint = parsedArguments?.get(disableSwiftLintOption) ?? false
         
-        return CapriccioArguments(source: source, destination: destination, excludedTags: excludedTags, includedTags: includedTags, generatedClassType: generatedClassType, useSingleFile: useSingleFile, disableFileLenghtWarning: disableFileLenghtWarning)
+        return CapriccioArguments(source: source, destination: destination, excludedTags: excludedTags, includedTags: includedTags, generatedClassType: generatedClassType, useSingleFile: useSingleFile, disableSwiftLint: disableSwiftLint)
     }
 }

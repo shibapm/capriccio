@@ -116,7 +116,7 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
         import XCTest
         import XCTest_Gherkin
 
-        // swiftlint:disable file_length
+        // swiftlint:disable all
         final class FeatureNumberOne: XCTestCase {
             func testScenarioIWantToTest() {
                 Given("I'm in a situation")
@@ -124,14 +124,14 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
                 And("Something else happens")
             }
         }
-        // swiftlint:enable file_length
+        // swiftlint:enable all
         """
         
-        fileGenerationCheck(feature: feature, expectedResult: expectedResult, disableFileLenghtWarning: true)
+        fileGenerationCheck(feature: feature, expectedResult: expectedResult, disableSwiftLint: true)
     }
     
-    func fileGenerationCheck(feature: Feature, expectedResult: String, generatedClassType: String? = nil, disableFileLenghtWarning: Bool = false) {
-        let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType, disableFileLenghtWarning: disableFileLenghtWarning)
+    func fileGenerationCheck(feature: Feature, expectedResult: String, generatedClassType: String? = nil, disableSwiftLint: Bool = false) {
+        let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType, disableSwiftLint: disableSwiftLint)
         expect(self.splittedAndTrimmedStringToTest(fromString: expectedResult)) == splittedAndTrimmedStringToTest(fromString: text)
     }
     

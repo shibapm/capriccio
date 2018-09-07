@@ -9,18 +9,18 @@ import Gherkin
 import Stencil
 
 public protocol SwiftTestCodeGenerating {
-    func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?, disableFileLenghtWarning: Bool) -> String
+    func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?, disableSwiftLint: Bool) -> String
 }
 
 public final class SwiftTestCodeGenerator: SwiftTestCodeGenerating {
     public init() { }
     
-    public func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?, disableFileLenghtWarning: Bool) -> String {
+    public func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?, disableSwiftLint: Bool) -> String {
         let template = Template(templateString: templateString)
         let generatedClassType = generatedClassType ?? "XCTestCase"
         
         do {
-            return try template.render(["feature": feature.dictionary, "classType": generatedClassType, "disableFileLenghtWarning": disableFileLenghtWarning])
+            return try template.render(["feature": feature.dictionary, "classType": generatedClassType, "disableSwiftLint": disableSwiftLint])
         }
         catch {
             fatalError("Template file rendering failed with error \(error)")
@@ -33,8 +33,8 @@ private let templateString = """
 import XCTest
 import XCTest_Gherkin
 
-{% if disableFileLenghtWarning %}
-// swiftlint:disable file_length
+{% if disableSwiftLint %}
+// swiftlint:disable all
 {% endif %}
 final class {{ feature.className }}: {{ classType }} {
     {% for scenario in feature.scenarios %}
@@ -55,7 +55,7 @@ final class {{ feature.className }}: {{ classType }} {
     {% endif %}
     {% endfor %}
 }
-{% if disableFileLenghtWarning %}
-// swiftlint:enable file_length
+{% if disableSwiftLint %}
+// swiftlint:enable all
 {% endif %}
 """

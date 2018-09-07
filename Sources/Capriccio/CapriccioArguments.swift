@@ -12,5 +12,5 @@ struct CapriccioArguments {
     let includedTags: [String]?
     let generatedClassType: String?
     let useSingleFile: Bool
-    let disableFileLenghtWarning: Bool
+    let disableSwiftLint: Bool
 }
