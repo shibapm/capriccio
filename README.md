@@ -78,7 +78,7 @@ class GherkinTestCase: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        mockedServer = NetworkStubber()
+        mockedServer = MockedServer()
         mockedServer.start()
         
         stepDefinition = StepDefinitions(testCase: self)
