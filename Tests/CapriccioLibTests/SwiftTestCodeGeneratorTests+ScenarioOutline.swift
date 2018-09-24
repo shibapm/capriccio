@@ -30,14 +30,14 @@ extension SwiftTestCodeGeneratorTests {
         import XCTest_Gherkin
 
         final class FeatureNumberOne: XCTestCase {
-                func testScenarioIWantToTestWithValue2AndValue1() {
+                func testScenarioIWantToTestWithValue1AndValue2() {
                     Given("I'm in a situation")
                     When("Something happens value1")
                     Then("Something else happens value2")
         
                 }
         
-                func testScenarioIWantToTestWithValue4AndValue3() {
+                func testScenarioIWantToTestWithValue3AndValue4() {
                     Given("I'm in a situation")
                     When("Something happens value3")
                     Then("Something else happens value4")
@@ -78,25 +78,25 @@ extension SwiftTestCodeGeneratorTests {
         import XCTest_Gherkin
 
         final class FeatureNumberOne: XCTestCase {
-                func testScenarioIWantToTestWithValue2AndValue1() {
+                func testScenarioIWantToTestWithValue1AndValue2() {
                     Given("I'm in a situation")
                     When("Something happens value1")
                     Then("Something else happens value2")
                 }
         
-                func testScenarioIWantToTestWithValue4AndValue3() {
+                func testScenarioIWantToTestWithValue3AndValue4() {
                     Given("I'm in a situation")
                     When("Something happens value3")
                     Then("Something else happens value4")
                 }
 
-                func testOtherScenarioIWantToTestWithValue6AndValue5() {
+                func testOtherScenarioIWantToTestWithValue5AndValue6() {
                     Given("I'm in another situation")
                     When("Something different happens value6")
                     Then("Something else happens value5")
                 }
         
-                func testOtherScenarioIWantToTestWithValue8AndValue7() {
+                func testOtherScenarioIWantToTestWithValue7AndValue8() {
                     Given("I'm in another situation")
                     When("Something different happens value8")
                     Then("Something else happens value7")
@@ -127,13 +127,13 @@ extension SwiftTestCodeGeneratorTests {
         import XCTest_Gherkin
 
         final class FeatureNumberOne: XCTestCase {
-                func testScenarioIWantToTestWithTextWithSpacesCommasAndDotsAndValue1() {
+                func testScenarioIWantToTestWithValue1AndTextWithSpacesCommasAndDots() {
                     Given("I'm in a situation")
                     When("Something happens value1")
                     Then("Something else happens text with spaces, commas and dots.")
                 }
         
-                func testScenarioIWantToTestWithValue4AndAnotherReallyComplexText() {
+                func testScenarioIWantToTestWithAnotherReallyComplexTextAndValue4() {
                     Given("I'm in a situation")
                     When("Something happens another - really % complex @ text")
                     Then("Something else happens value4")

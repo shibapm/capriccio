@@ -78,7 +78,7 @@ extension Step {
 
 extension Example {
     var methodNameExamplePart: String {
-        return values.reduce("") { (result, item) -> String in
+        return values.sorted { $0.key < $1.key }.reduce("") { (result, item) -> String in
             let (_, value) = item
             var result = result
             
