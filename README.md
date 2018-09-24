@@ -1,5 +1,5 @@
 # Capriccio
-![Swift 4.0](https://img.shields.io/badge/Swift-4.0-blue.svg)
+![Swift 4.2](https://img.shields.io/badge/Swift-4.2-blue.svg)
 
 Capriccio is a tool to generate UI Tests from gherkins `.feature` files.
 
