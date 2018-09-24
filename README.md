@@ -102,3 +102,40 @@ capriccio source destination -c GherkinTestCase
 ```
 
 All the generated classes will be a subclass of `GherkinTestCase` instead of a subclass of `XCTestCase`
+
+# Scenario outline
+Capriccio creates a different test for each example.
+
+e.g.
+
+```
+Feature: Feature number one
+
+Scenario Outline: Scenario I want to  test
+Given I'm in a situation
+When something happens <key1>
+Then something else happens <key2>
+Examples:
+| key1 | key2 |
+| value1 | value2 |
+| value3 | value4 |
+```
+Generates:
+```swift
+import XCTest
+import XCTest_Gherkin
+
+final class FeatureNumberOne: XCTestCase {
+    func testScenarioIWantToTestWithValue1AndValue2() {
+        Given("I'm in a situation")
+        When("Something happens value1")
+        Then("Something else happens value2")
+    }
+        
+    func testScenarioIWantToTestWithValue3AndValue4() {
+        Given("I'm in a situation")
+        When("Something happens value3")
+        Then("Something else happens value4")
+    }
+}
+```
