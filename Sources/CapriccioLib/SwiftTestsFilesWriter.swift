@@ -9,11 +9,14 @@ import Gherkin
 
 public final class SwiftTestsFilesWriter {
     let swiftCodeGenerator: SwiftTestCodeGenerating
+    let codeWriter: CodeWriting
     
     private let singleFileName = "FeaturesUITests.swift"
     
-    public init(swiftCodeGenerator: SwiftTestCodeGenerating = SwiftTestCodeGenerator()) {
+    public init(swiftCodeGenerator: SwiftTestCodeGenerating = SwiftTestCodeGenerator(),
+                codeWriter: CodeWriting = CodeWriter()) {
         self.swiftCodeGenerator = swiftCodeGenerator
+        self.codeWriter = codeWriter
     }
     
     public func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String, generatedClassType: String?, disableSwiftLint: Bool, useSingleFile: Bool) {
@@ -32,11 +35,7 @@ public final class SwiftTestsFilesWriter {
         let singleFileCode = featuresCode.joined(separator: "\n\n")
         let singleFilePath = folderPath.appending("/" + singleFileName)
         
-        do {
-            try singleFileCode.write(toFile: singleFilePath, atomically: false, encoding: .utf8)
-        } catch {
-            print("Unable to save the generated UI Tests file, error: \(error)")
-        }
+        write(code: singleFileCode, toFile: singleFilePath)
     }
     
     private func writeFeatureFiles(fromFeaturesCode featuresCode: [String], features: [Feature], folderPath: String) {
@@ -45,11 +44,32 @@ public final class SwiftTestsFilesWriter {
             let feature = features[i]
             
             let featureFilePath = folderPath.appending("/" + feature.name.validEntityName() + ".swift")
-            do {
-                try code.write(toFile: featureFilePath, atomically: false, encoding: .utf8)
-            } catch {
-                print("Unable to save the feature \"\(feature.name.validEntityName())\", error: \(error)")
-            }
+            write(code: code, toFile: featureFilePath)
+        }
+    }
+    
+    private func write(code: String, toFile featureFilePath: String) {
+        if let previousCode = try? String(contentsOfFile: featureFilePath),
+            previousCode == code {
+            return
+        }
+        
+        codeWriter.write(code: code, toFile: featureFilePath)
+    }
+}
+
+public protocol CodeWriting {
+    func write(code: String, toFile featureFilePath: String)
+}
+
+public final class CodeWriter: CodeWriting {
+    public init() {}
+    
+    public func write(code: String, toFile featureFilePath: String) {
+        do {
+            try code.write(toFile: featureFilePath, atomically: false, encoding: .utf8)
+        } catch {
+            print("Unable to save the generated UI Tests file, error: \(error)")
         }
     }
 }
