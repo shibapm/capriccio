@@ -17,7 +17,7 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
     private var stubbedSwiftTestCodeGenerating: StubbedSwiftTestCodeGenerating!
     
     let testFolder = NSSearchPathForDirectoriesInDomains(.documentDirectory,
-                                                         .userDomainMask, true).first!
+                                                         .userDomainMask, true).first! + "/"
     
     var generatedFilesPaths: [String]!
     
