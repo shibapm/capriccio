@@ -1,6 +1,7 @@
 # Capriccio
 ![Swift 4.2](https://img.shields.io/badge/Swift-4.2-blue.svg)
 [![Build Status](https://app.bitrise.io/app/ac2572c809b906b7/status.svg?token=or92GFZDMVH_iZxnvEHyfw&branch=master)](https://app.bitrise.io/app/ac2572c809b906b7)
+[![codecov](https://codecov.io/gh/f-meloni/capriccio/branch/master/graph/badge.svg)](https://codecov.io/gh/f-meloni/capriccio)
 
 Capriccio is a tool to generate UI Tests from gherkins `.feature` files.
 
