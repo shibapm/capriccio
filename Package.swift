@@ -6,9 +6,6 @@ import PackageDescription
 let package = Package(
     name: "Capriccio",
     products: [
-        .library(
-            name: "CapriccioLib",
-            targets: ["CapriccioLib"]),
         .executable(
             name: "Capriccio",
             targets: ["Capriccio"])
