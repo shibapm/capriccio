@@ -83,19 +83,22 @@ final class FeatureFilesReaderTests: XCTestCase {
 }
 
 private extension FeatureFilesReaderTests {
+    private var baseFolder: String {
+        return NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                   .userDomainMask,
+                                                   true).first!
+    }
+    
     private var testFile1Path: String {
-        return NSSearchPathForDirectoriesInDomains(.applicationDirectory,
-                                                   .userDomainMask, true).first! + "test1.feature"
+        return baseFolder + "test1.feature"
     }
     
     private var testFile2Path: String {
-        return NSSearchPathForDirectoriesInDomains(.applicationDirectory,
-                                                            .userDomainMask, true).first! + "test2.feature"
+        return baseFolder + "test2.feature"
     }
     
     private var testFile3Path: String {
-        return NSSearchPathForDirectoriesInDomains(.applicationDirectory,
-                                                   .userDomainMask, true).first! + "test3.feature"
+        return baseFolder + "test3.feature"
     }
     
     private func testFeatureFile1Content() -> String {
