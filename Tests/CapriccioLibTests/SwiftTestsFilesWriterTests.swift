@@ -23,6 +23,16 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
     
     let testContent = "Test Code"
     
+    var feature1: Feature {
+        return Feature(name: "Feature number one",
+                       description: "",
+                       scenarios: [])
+    }
+    
+    let feature2 = Feature(name: "Feature number two",
+                           description: "",
+                           scenarios: [])
+    
     override func setUp() {
         super.setUp()
         generatedFilesPaths = []
@@ -40,51 +50,46 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
     }
     
     func testItPassesTheGeneratedClassTypeToTheCodeGenerator() {
-        let feature = Feature(name: "Feature number one",
-                              description: "",
-                              scenarios: [])
-        
         let generatedClassType = "ClassType"
         
-        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature], inFolder: testFolder, generatedClassType: generatedClassType, disableSwiftLint: true, templateFilePath: nil, useSingleFile: false)
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature1], inFolder: testFolder, generatedClassType: generatedClassType, disableSwiftLint: true, templateFilePath: nil, useSingleFile: false)
         
-        let filePath = self.filePath(forFeature: feature)
+        let filePath = self.filePath(forFeature: feature1)
+        
+        generatedFilesPaths.append(filePath)
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature1, generatedClassType: generatedClassType, templateFilePath: nil, disableSwiftLint: true)))
+    }
+    
+    func testItPassesTheTemplatePathToTheCodeGenerator() {
+        let templatePath = "test"
+        
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature1], inFolder: testFolder, generatedClassType: nil, disableSwiftLint: true, templateFilePath: templatePath, useSingleFile: false)
+        
+        let filePath = self.filePath(forFeature: feature1)
         generatedFilesPaths.append(filePath)
         
         
-        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType, templateFilePath: nil, disableSwiftLint: true)))
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature1, generatedClassType: nil, templateFilePath: templatePath, disableSwiftLint: true)))
     }
     
     func testItWritesTheCorrectFileForAFeature() {
-        let feature = Feature(name: "Feature number one",
-                              description: "",
-                              scenarios: [])
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature1], inFolder: testFolder, generatedClassType: nil,  disableSwiftLint: true, templateFilePath: nil, useSingleFile: false)
         
-        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature], inFolder: testFolder, generatedClassType: nil,  disableSwiftLint: true, templateFilePath: nil, useSingleFile: false)
-        
-        let filePath = self.filePath(forFeature: feature)
+        let filePath = self.filePath(forFeature: feature1)
         generatedFilesPaths.append(filePath)
         
-        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature, generatedClassType: nil, templateFilePath: nil, disableSwiftLint: true)))
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature1, generatedClassType: nil, templateFilePath: nil, disableSwiftLint: true)))
         expect(FileManager.default.fileExists(atPath: filePath)) == true
         expect(try? String(contentsOfFile: filePath)) == testContent
     }
     
     func testItWritesTheCorrectFileForMultipleFeatures() {
-        let feature = Feature(name: "Feature number one",
-                              description: "",
-                              scenarios: [])
+        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature1, feature2], inFolder: testFolder, generatedClassType: nil, disableSwiftLint: true, templateFilePath: nil, useSingleFile: false)
         
-        let feature2 = Feature(name: "Feature number two",
-                              description: "",
-                              scenarios: [])
-        
-        swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature, feature2], inFolder: testFolder, generatedClassType: nil, disableSwiftLint: true, templateFilePath: nil, useSingleFile: false)
-        
-        let filePath = self.filePath(forFeature: feature)
+        let filePath = self.filePath(forFeature: feature1)
         generatedFilesPaths.append(filePath)
         
-        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature, generatedClassType: nil, templateFilePath: nil, disableSwiftLint: true)))
+        expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature1, generatedClassType: nil, templateFilePath: nil, disableSwiftLint: true)))
         expect(FileManager.default.fileExists(atPath: filePath)) == true
         expect(try? String(contentsOfFile: filePath)) == testContent
         
@@ -100,10 +105,6 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
         let feature = Feature(name: "Feature number one",
                               description: "",
                               scenarios: [])
-        
-        let feature2 = Feature(name: "Feature number two",
-                               description: "",
-                               scenarios: [])
         
         swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature, feature2], inFolder: testFolder, generatedClassType: nil, disableSwiftLint: false, templateFilePath: nil, useSingleFile: true)
         
