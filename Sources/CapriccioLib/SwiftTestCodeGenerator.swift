@@ -9,14 +9,21 @@ import Gherkin
 import Stencil
 
 public protocol SwiftTestCodeGenerating {
-    func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?, disableSwiftLint: Bool) -> String
+    func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?, templateFilePath: String?, disableSwiftLint: Bool) -> String
 }
 
 public final class SwiftTestCodeGenerator: SwiftTestCodeGenerating {
     public init() { }
     
-    public func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?, disableSwiftLint: Bool) -> String {
-        let template = Template(templateString: templateString)
+    public func generateSwiftTestCode(forFeature feature: Feature, generatedClassType: String?, templateFilePath: String?, disableSwiftLint: Bool) -> String {
+        let template: Template
+        
+        if let templateFilePath = templateFilePath {
+            template = try! Template(templateString: String(contentsOfFile: templateFilePath))
+        } else {
+            template =  Template(templateString: templateString)
+        }
+        
         let generatedClassType = generatedClassType ?? "XCTestCase"
         
         do {

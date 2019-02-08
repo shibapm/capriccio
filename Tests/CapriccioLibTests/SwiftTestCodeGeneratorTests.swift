@@ -131,7 +131,7 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
     }
     
     func fileGenerationCheck(feature: Feature, expectedResult: String, generatedClassType: String? = nil, disableSwiftLint: Bool = false) {
-        let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType, disableSwiftLint: disableSwiftLint)
+        let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType, templateFilePath: nil, disableSwiftLint: disableSwiftLint)
         expect(self.splittedAndTrimmedStringToTest(fromString: expectedResult)) == splittedAndTrimmedStringToTest(fromString: text)
     }
     

@@ -27,6 +27,8 @@ final class CapriccioArgumentsParser {
         
         let disableSwiftLintOption = parser.add(option: "--disable-swiflint", shortName: "-l", kind: Bool.self, usage: "Disables swiftlint on the file", completion: nil)
         
+        let templateFileOption = parser.add(option: "--template-file", shortName: "-t", kind: String.self, usage: "Path to the stencil template file", completion: nil)
+        
         let parsedArguments = try? parser.parse(arguments)
 
         guard let source = parsedArguments?.get(sourceArgument) else {
@@ -42,7 +44,8 @@ final class CapriccioArgumentsParser {
         let generatedClassType = parsedArguments?.get(generatedClassTypeOption)
         let useSingleFile = parsedArguments?.get(useSingleFileOption) ?? false
         let disableSwiftLint = parsedArguments?.get(disableSwiftLintOption) ?? false
+        let templateFile = parsedArguments?.get(templateFileOption)
         
-        return CapriccioArguments(source: source, destination: destination, excludedTags: excludedTags, includedTags: includedTags, generatedClassType: generatedClassType, useSingleFile: useSingleFile, disableSwiftLint: disableSwiftLint)
+        return CapriccioArguments(source: source, destination: destination, excludedTags: excludedTags, includedTags: includedTags, generatedClassType: generatedClassType, useSingleFile: useSingleFile, disableSwiftLint: disableSwiftLint, templateFilePath: templateFile)
     }
 }
