@@ -13,4 +13,5 @@ struct CapriccioArguments {
     let generatedClassType: String?
     let useSingleFile: Bool
     let disableSwiftLint: Bool
+    let templateFilePath: String?
 }

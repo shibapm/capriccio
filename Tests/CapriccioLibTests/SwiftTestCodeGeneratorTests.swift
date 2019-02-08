@@ -130,8 +130,63 @@ final class SwiftTestCodeGeneratorTests: XCTestCase {
         fileGenerationCheck(feature: feature, expectedResult: expectedResult, disableSwiftLint: true)
     }
     
-    func fileGenerationCheck(feature: Feature, expectedResult: String, generatedClassType: String? = nil, disableSwiftLint: Bool = false) {
-        let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType, disableSwiftLint: disableSwiftLint)
+    func testItUsesAPassedTemplate() {
+        let path = "testPath"
+        
+        try! """
+        import Lib1
+        import Lib2
+
+        {{ feature.className }}: {{ classType }} {
+        {% for scenario in feature.scenarios %}
+        {% if scenario.examples.count > 0 %}
+        {% for i in 0...scenario.examplesCountForIteration %}
+        func test{{ scenario.methodName }}With{{ scenario.examples[i].methodNameExamplePart }}() {
+            {% for step in scenario.examplesSteps[i] %}
+            {{ step.swiftText }}
+            {% endfor %}
+        }
+        {% endfor %}
+        {% else %}
+        {{ scenario.methodName }}() {
+            {% for step in scenario.steps%}
+            {{ step.swiftText }}
+            {% endfor %}
+        }
+        {% endif %}
+        {% endfor %}
+        }
+        """.write(toFile: path, atomically: false, encoding: .utf8)
+        
+        let scenario: Scenario = .simple(ScenarioSimple(name: "Scenario \\/ I want to test",
+                                                        description: "",
+                                                        steps:[Step(name: .given, text: "I'm in a situation"),
+                                                               Step(name: .when, text: "Something happens"),
+                                                               Step(name: .but, text: "Something else happens")] ))
+        let feature = Feature(name: "Feature $%^& number one",
+                              description: "",
+                              scenarios: [scenario])
+        
+        let expectedResult = """
+        import Lib1
+        import Lib2
+
+        FeatureNumberOne: XCTestCase {
+            ScenarioIWantToTest() {
+                Given("I'm in a situation")
+                When("Something happens")
+                And("Something else happens")
+            }
+        }
+        """
+        
+        fileGenerationCheck(feature: feature, expectedResult: expectedResult, templateFilePath: path)
+        
+        try? FileManager.default.removeItem(atPath: path)
+    }
+    
+    func fileGenerationCheck(feature: Feature, expectedResult: String, generatedClassType: String? = nil, templateFilePath: String? = nil, disableSwiftLint: Bool = false) {
+        let text = swiftCodeGenerator.generateSwiftTestCode(forFeature: feature, generatedClassType: generatedClassType, templateFilePath: templateFilePath, disableSwiftLint: disableSwiftLint)
         expect(self.splittedAndTrimmedStringToTest(fromString: expectedResult)) == splittedAndTrimmedStringToTest(fromString: text)
     }
     
