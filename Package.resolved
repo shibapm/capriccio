@@ -75,11 +75,11 @@
       },
       {
         "package": "TestSpy",
-        "repositoryURL": "https://github.com/dhardiman/TestSpy",
+        "repositoryURL": "https://github.com/f-meloni/TestSpy",
         "state": {
-          "branch": "master",
-          "revision": "16dd8492725ec5c1c1842857b0b28641befbcd8d",
-          "version": null
+          "branch": null,
+          "revision": "c6df56a8a6d2cc58175f9214588fdeacd3d7cfee",
+          "version": "0.4.0"
         }
       }
     ]
