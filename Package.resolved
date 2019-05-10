@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/Quick/Nimble",
         "state": {
           "branch": null,
-          "revision": "9a281b1cfa1c53d1e8bd92e1798e4e473af8d263",
-          "version": "7.3.3"
+          "revision": "43304bf2b1579fd555f2fdd51742771c1e4f2b98",
+          "version": "8.0.1"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/Quick/Quick",
         "state": {
           "branch": null,
-          "revision": "f2b5a06440ea87eba1a167cab37bf6496646c52e",
-          "version": "1.3.4"
+          "revision": "94df9b449508344667e5afc7e80f8bcbff1e4c37",
+          "version": "2.1.0"
         }
       },
       {
@@ -77,9 +77,9 @@
         "package": "TestSpy",
         "repositoryURL": "https://github.com/f-meloni/TestSpy",
         "state": {
-          "branch": "master",
-          "revision": "e0f1e9d4d10080762bb3b5256a94f347e74416f0",
-          "version": null
+          "branch": null,
+          "revision": "c6df56a8a6d2cc58175f9214588fdeacd3d7cfee",
+          "version": "0.4.0"
         }
       }
     ]
