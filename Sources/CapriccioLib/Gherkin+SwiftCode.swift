@@ -7,93 +7,149 @@
 
 import Gherkin
 
-extension Feature {
-    var className: String {
-        return name.validEntityName()
+/**
+ description: Following text after `Feature:`
+ name: description but without space and uppercased
+ scenarios: List of Scenario
+ tags: list of tags on that Feature
+ */
+public struct Feature: Encodable, Equatable {
+    var description: String
+    var name: String
+    var scenarios: [Scenario]
+    var tags: [Tag]
+    
+    init(gherkinFeature: Gherkin.Feature) {
+        description = gherkinFeature.name
+        name = gherkinFeature.name.validEntityName()
+        scenarios = gherkinFeature.scenarios.compactMap(Scenario.init)
+        tags = gherkinFeature.tags?.compactMap(Tag.init) ?? []
     }
     
-    var dictionary: [String:Any] {
-        return ["className": className,
-                "scenarios": scenarios.map { $0.dictionary }]
+    init(description: String, name: String, scenarios: [Scenario], tags: [Tag]) {
+        self.description = description
+        self.name = name
+        self.scenarios = scenarios
+        self.tags = tags
     }
 }
 
-extension Scenario {
-    var methodName: String {
-        return name.validEntityName()
-    }
+/**
+ description: Following text after `Scenario:` or `Scenario Outline:`
+ name: description but without space and uppercased
+ steps: List of steps
+ tags: List of tags on that scenario
+ examples: List of examples if it's a scenario outline
+ */
+public struct Scenario: Encodable, Equatable {
+    var description: String
+    var name: String
+    var steps: [Step]
+    var tags: [Tag]
+    var examples: [Example]
     
-    var dictionary: [String:Any] {
-        var result: [String:Any] = ["methodName": methodName]
+    init(gherkinScenario: Gherkin.Scenario) {
+        description = gherkinScenario.name
+        name = gherkinScenario.name.validEntityName()
+        tags = gherkinScenario.tags?.compactMap(Tag.init) ?? []
+        let steps = gherkinScenario.steps.compactMap(Step.init)
         
-        switch self {
-        case .simple:
-            result["steps"] = steps.map { $0.dictionary }
-        case .outline:
-            result["examples"] = examples?.map { $0.dictionary } ?? [:]
-            result["examplesCountForIteration"] = (examples?.count ?? 0) - 1 // Stencil doens't support - operator
-            
-            let examplesSteps = examples?.map {
-                example in steps.map { step in
-                    step.createDictionary(forExample: example)
-                }
+        let examples: [Example] = (gherkinScenario.examples?.compactMap(Example.init) ?? []).compactMap { example in
+            var exampleCopy = example
+            for step in steps {
+                exampleCopy.replaceDescriptionKeyword(on: step)
             }
-            result["examplesSteps"] = examplesSteps
+            return exampleCopy
         }
         
-        return result
+        self.examples = examples
+        self.steps = steps
     }
 }
 
-extension Step {
-    var dictionary: [String:Any] {
-        return createDictionary(forExample: nil)
-    }
+/**
+ type: Given, When, Then, And, But
+ description: Following text after `type`
+ descriptionReplaceKeyword: description but if it is an example replaced all keywords for respective value
+ name: description but without space and uppercased
+ */
+public struct Step: Encodable, Equatable {
+    var type: String
+    var description: String
+    var name: String
+    var parameters: [Parameter] = []
     
-    func createDictionary(forExample example: Example?) -> [String:Any] {
-        var text: String
-        if let example = example {
-            text = example.values.reduce(self.text) { $0.replacingOccurrences(of: "<" + $1.key + ">", with: $1.value)  }
-        } else {
-            text = self.text
-        }
-        
-        return ["swiftText": swiftText(fromText: text)]
-    }
-    
-    private func swiftText(fromText text: String) -> String {
-        return stepName + "(\"" + text + "\")"
-    }
-    
-    // But is not handled by XCTest_Gherkin. And is the closest stap name that we can use
-    private var stepName: String {
-        switch name {
+    init(gherkinStep: Gherkin.Step) {
+        switch gherkinStep.name {
         case .but:
-            return "And"
+            type = "And"
         default:
-            return name.rawValue.capitalized
+            type = gherkinStep.name.rawValue.validEntityName()
         }
+        
+        description = gherkinStep.text
+        name = gherkinStep.text.validEntityName()
     }
 }
 
-extension Example {
-    var methodNameExamplePart: String {
-        return values.sorted { $0.key < $1.key }.reduce("") { (result, item) -> String in
-            let (_, value) = item
-            var result = result
-            
-            if !result.isEmpty {
-                result += "And"
-            }
-
-            
-            result += value.validEntityName()
-            return result
-        }
+/**
+ values: Array of value, where key is the first element on a table on .feature file
+ valuesDescription: all values capitalized joined in a string, using "And" as separator.
+ steps: List of steps that uses this Example
+ */
+public struct Example: Encodable, Equatable {
+    var valuesDescription: String
+    var values: [String: String]
+    var steps: [Step] = []
+    
+    init(gherkinExample: Gherkin.Example) {
+        values = gherkinExample.values
+        
+        let allValues = gherkinExample.values.sorted(by: { $0.0 < $1.0 }).compactMap { $0.value.validEntityName() }
+        valuesDescription = allValues.joined(separator: "And")
     }
     
-    var dictionary: [String:Any] {
-        return ["values": values,
-                "methodNameExamplePart": methodNameExamplePart]
+    mutating func replaceDescriptionKeyword(on step: Step) {
+        var step = step
+        
+        var text = step.description
+        var parameters: [Parameter] = []
+        
+        let sortedDictionary = values.sorted(by: {$0.0 < $1.0 })
+        for (key, value) in sortedDictionary {
+            if step.description.contains("<\(key)>") {
+                text = step.description.replacingOccurrences(of: "<\(key)>", with: value)
+                parameters.append(Parameter(key: key, value: value))
+            }
+        }
+        
+        step.description = text
+        step.parameters = parameters
+        
+        steps.append(step)
     }
+}
+
+/**
+ name: Following text after `@`
+ */
+public struct Tag: Encodable, Equatable {
+    var name: String
+
+    init(gherkinTag: Gherkin.Tag) {
+        name = gherkinTag.name
+    }
+    
+    init(name: String) {
+        self.name = name
+    }
+}
+
+/**
+ key: key of a Data Table
+ value: value of a Data Table
+ */
+struct Parameter: Encodable, Equatable {
+    var key: String
+    var value: String
 }
