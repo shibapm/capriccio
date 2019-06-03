@@ -11,7 +11,7 @@ public final class SwiftTestsFilesWriter {
     let swiftCodeGenerator: SwiftTestCodeGenerating
     let codeWriter: CodeWriting
     
-    private let singleFileName = "FeaturesUITests.swift"
+    private let singleFileName = "FeaturesUITests.generated.swift"
     
     public init(swiftCodeGenerator: SwiftTestCodeGenerating = SwiftTestCodeGenerator(),
                 codeWriter: CodeWriting = CodeWriter()) {
@@ -43,7 +43,8 @@ public final class SwiftTestsFilesWriter {
             let code = featuresCode[i]
             let feature = features[i]
             
-            let featureFilePath = folderPath.appending("/" + feature.name.validEntityName() + ".swift")
+            let fileName = feature.fileName ?? feature.name
+            let featureFilePath = folderPath.appending("/" + fileName.validEntityName() + "UITests.generated.swift")
             write(code: code, toFile: featureFilePath)
         }
     }

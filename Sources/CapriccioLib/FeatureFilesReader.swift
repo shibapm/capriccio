@@ -12,11 +12,16 @@ public final class FeatureFilesReader {
     public init() { }
     
     public func readFiles(atPaths paths: [String], includedTags: [String]?, excludedTags: [String]?) -> [Feature] {
+        let fileNames = paths.compactMap(getFileName)
         let filesContent = paths.compactMap { try? String(contentsOfFile: $0).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
         
         let newText: [String] = trimLines(from: filesContent)
         let gherkinFeatures = newText.compactMap { try! Gherkin.Feature($0) }
-        let features = gherkinFeatures.compactMap(Feature.init)
+        var features = gherkinFeatures.compactMap(Feature.init)
+        
+        for i in 0..<fileNames.count {
+            features[i].fileName = fileNames[i]
+        }
         
         if includedTags != nil || excludedTags != nil {
             let includedTag = includedTags?.compactMap(Tag.init) ?? []
@@ -39,10 +44,11 @@ public final class FeatureFilesReader {
                 return includedTagsCheck && excludedTagsCheck
             }
             
-            return scenarios.count == 0 ?  nil : Feature(description: feature.description,
-                                                                     name: feature.name,
-                                                                     scenarios: scenarios,
-                                                                     tags: feature.tags)
+            return scenarios.count == 0 ?  nil : Feature(fileName: feature.fileName,
+                                                         description: feature.description,
+                                                         name: feature.name,
+                                                         scenarios: scenarios,
+                                                         tags: feature.tags)
         }
     }
     
@@ -59,5 +65,18 @@ public final class FeatureFilesReader {
             
             return newLines.joined(separator: "\n")
         }
+    }
+    
+    private func getFileName(from path: String) -> String? {
+        if let regex = try? NSRegularExpression(pattern: "\\s?/[\\w\\s]*\\.feature", options: .caseInsensitive)
+        {
+            let string = path as NSString
+            let fileName = regex.matches(in: path, options: [], range: NSRange(location: 0, length: string.length)).map {
+                string.substring(with: $0.range).replacingOccurrences(of: ".feature", with: "").replacingOccurrences(of: "/", with: "").validEntityName()
+            }
+            
+            return fileName.first
+        }
+        return nil
     }
 }

@@ -23,14 +23,16 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
     let testContent = "Test Code"
     
     var feature1: Feature {
-        return Feature(description: "Feature number one",
+        return Feature(fileName: "FeatureOne",
+                       description: "Feature number one",
                        name: "FeatureNumberOne",
                        scenarios: [],
                        tags: [])
     }
     
     var feature2: Feature {
-        return Feature(description: "Feature number two",
+        return Feature(fileName: "FeatureTwo",
+                       description: "Feature number two",
                        name: "FeatureNumberTwo",
                        scenarios: [],
                        tags: [])
@@ -71,7 +73,6 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
         let filePath = self.filePath(forFeature: feature1)
         generatedFilesPaths.append(filePath)
         
-        
         expect(self.stubbedSwiftTestCodeGenerating).to(haveReceived(.generateSwiftTestCode(forFeature: feature1, generatedClassType: nil, templateFilePath: templatePath, disableSwiftLint: true, version: "1.0.0")))
     }
     
@@ -107,7 +108,7 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
     func testItWritesTheCorrectFileForMultipleFeaturesOnSingleFile() {
         swiftTestsFilesWriter.writeSwiftTest(fromFeatures: [feature1, feature2], inFolder: testFolder, generatedClassType: nil, disableSwiftLint: false, templateFilePath: nil, useSingleFile: true, version: "1.0.0")
         
-        let filePath = testFolder + "/FeaturesUITests.swift"
+        let filePath = testFolder + "/FeaturesUITests.generated.swift"
         generatedFilesPaths.append(filePath)
         
         expect(FileManager.default.fileExists(atPath: filePath)) == true
@@ -115,7 +116,8 @@ final class SwiftTestsFilesWriterTests: XCTestCase {
     }
     
     private func filePath(forFeature feature: CapriccioLib.Feature) -> String {
-        return testFolder + "/" + feature.name.validEntityName() + ".swift"
+        let fileName = feature.fileName ?? feature.name
+        return testFolder + "/" + fileName.validEntityName() + "UITests.generated.swift"
     }
 }
 
