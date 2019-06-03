@@ -11,12 +11,18 @@ import CapriccioLib
 
 let capriccioVersion = "1.0.0"
 
-let arguments = CapriccioArgumentsParser.parseArguments()
+let filesFetcher = FeatureFilesFetcher()
+
+var arguments: CapriccioArguments
+if let yamlPath = filesFetcher.yamlFile() {
+    arguments = CapriccioArgumentsParser.parseArguments(yaml: yamlPath)
+} else {
+    arguments = CapriccioArgumentsParser.parseArguments()
+}
 
 let source = arguments.source
 let destination = arguments.destination
 
-let filesFetcher = FeatureFilesFetcher()
 let featureFiles = filesFetcher.featureFiles(atPath: source)
 
 let filesReader = FeatureFilesReader()

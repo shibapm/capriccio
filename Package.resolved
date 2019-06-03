@@ -66,10 +66,10 @@
       },
       {
         "package": "Gherkin",
-        "repositoryURL": "https://github.com/f-meloni/SwiftGherkin",
+        "repositoryURL": "https://github.com/FelipeDocil/SwiftGherkin",
         "state": {
-          "branch": "gherkin_indentation",
-          "revision": "5899421546cc38477c62d9aa69b13d140ee8af2c",
+          "branch": "support_comments",
+          "revision": "6e7a6010f4c8ca77b6acd82bc0f42ea3d3efdbab",
           "version": null
         }
       },
@@ -80,6 +80,15 @@
           "branch": null,
           "revision": "c6df56a8a6d2cc58175f9214588fdeacd3d7cfee",
           "version": "0.4.0"
+        }
+      },
+      {
+        "package": "Yams",
+        "repositoryURL": "https://github.com/jpsim/Yams.git",
+        "state": {
+          "branch": null,
+          "revision": "c947a306d2e80ecb2c0859047b35c73b8e1ca27f",
+          "version": "2.0.0"
         }
       }
     ]

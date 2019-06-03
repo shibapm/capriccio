@@ -25,4 +25,19 @@ public final class FeatureFilesFetcher {
         
         return directoryContents.filter { $0.hasSuffix(".feature") }.map { path + "/" + $0 }
     }
+    
+    public func yamlFile() -> String? {
+        let path = "."
+        let directoryContents: [String]
+        
+        do {
+            directoryContents = try fileManager.contentsOfDirectory(atPath: path)
+        } catch {
+            return nil
+        }
+        
+        let files = directoryContents.filter { $0.hasPrefix(".capriccio") && $0.hasSuffix(".yml") }.map { path + "/" + $0 }
+        
+        return files.first
+    }
 }

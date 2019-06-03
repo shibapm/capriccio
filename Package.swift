@@ -7,20 +7,21 @@ let package = Package(
     name: "Capriccio",
     products: [
         .executable(
-            name: "Capriccio",
+            name: "capriccio",
             targets: ["Capriccio"])
     ],
     dependencies: [
-        .package(url: "https://github.com/f-meloni/SwiftGherkin", .branch("gherkin_indentation")),
+        .package(url: "https://github.com/FelipeDocil/SwiftGherkin", .branch("support_comments")),
         .package(url: "https://github.com/stencilproject/Stencil", from: "0.12.1"),
         .package(url: "https://github.com/Quick/Nimble", from: "8.0.0"),
         .package(url: "https://github.com/f-meloni/TestSpy", from: "0.4.0"),
-        .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.1.0")
+        .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.1.0"),
+        .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0")
     ],
     targets: [
         .target(
             name: "CapriccioLib",
-            dependencies: ["Gherkin", "Stencil"]),
+            dependencies: ["Gherkin", "Stencil", "Yams"]),
         .target(
             name: "Capriccio",
             dependencies: ["CapriccioLib", "Utility"]),
