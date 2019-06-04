@@ -70,8 +70,8 @@ final class CapriccioArgumentsParser {
         
         let excludedTags = directoryContents["excludedTags"] as? [String]
         let includedTags = directoryContents["includedTags"] as? [String]
-        let generatedClassType = directoryContents["generatedClassType"] as? String
-        let useSingleFile = directoryContents["useSingleFile"] as? Bool ?? false
+        let generatedClassType = directoryContents["classType"] as? String
+        let useSingleFile = directoryContents["singleFile"] as? Bool ?? false
         let disableSwiftLint = directoryContents["disableSwiftLint"] as? Bool ?? false
         let templateFile = directoryContents["template"] as? String
         
