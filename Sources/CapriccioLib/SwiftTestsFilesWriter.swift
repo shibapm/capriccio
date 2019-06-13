@@ -11,7 +11,7 @@ public final class SwiftTestsFilesWriter {
     let swiftCodeGenerator: SwiftTestCodeGenerating
     let codeWriter: CodeWriting
     
-    private let singleFileName = "FeaturesUITests.swift"
+    private let singleFileName = "FeaturesUITests.generated.swift"
     
     public init(swiftCodeGenerator: SwiftTestCodeGenerating = SwiftTestCodeGenerator(),
                 codeWriter: CodeWriting = CodeWriter()) {
@@ -19,9 +19,9 @@ public final class SwiftTestsFilesWriter {
         self.codeWriter = codeWriter
     }
     
-    public func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String, generatedClassType: String?, disableSwiftLint: Bool, templateFilePath: String?, useSingleFile: Bool) {
+    public func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String, generatedClassType: String?, disableSwiftLint: Bool, templateFilePath: String?, useSingleFile: Bool, version: String) {
         
-        let featuresCode = features.map { swiftCodeGenerator.generateSwiftTestCode(forFeature: $0, generatedClassType: generatedClassType, templateFilePath: templateFilePath, disableSwiftLint: disableSwiftLint) }
+        let featuresCode = features.map { swiftCodeGenerator.generateSwiftTestCode(forFeature: $0, generatedClassType: generatedClassType, templateFilePath: templateFilePath, disableSwiftLint: disableSwiftLint, version: version) }
         
         if useSingleFile {
             writeSingleFile(fromFeaturesCode: featuresCode, folderPath: folderPath)
@@ -43,7 +43,8 @@ public final class SwiftTestsFilesWriter {
             let code = featuresCode[i]
             let feature = features[i]
             
-            let featureFilePath = folderPath.appending("/" + feature.name.validEntityName() + ".swift")
+            let fileName = feature.fileName ?? feature.name
+            let featureFilePath = folderPath.appending("/" + fileName.validEntityName() + "UITests.generated.swift")
             write(code: code, toFile: featureFilePath)
         }
     }

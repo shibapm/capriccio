@@ -23,113 +23,185 @@ final class FeatureFilesReaderTests: XCTestCase {
         try? FileManager.default.removeItem(atPath: testFile1Path)
         try? FileManager.default.removeItem(atPath: testFile2Path)
         try? FileManager.default.removeItem(atPath: testFile3Path)
+        try? FileManager.default.removeItem(atPath: testFile4DesktopPath)
         super.tearDown()
     }
     
     func testItCanReadSingleFeatureFile() {
-        write(fileContent: testFeatureFile1Content(), toPath: testFile1Path)
+        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
         
         let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path], includedTags: nil, excludedTags: nil)
         
         expect(featureFiles.count) == 1
-        expect(featureFiles[0].name) == "Test Scenario"
+        expect(featureFiles[0].description) == "Google Searching"
+        expect(featureFiles[0].scenarios.count) == 2
     }
     
     func testItCanReadMultipleFeatureFiles() {
-        write(fileContent: testFeatureFile1Content(), toPath: testFile1Path)
-        write(fileContent: testFeatureFile2Content(), toPath: testFile2Path)
+        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
+        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
         
         let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path], includedTags: nil, excludedTags: nil)
         
         expect(featureFiles.count) == 2
-        expect(featureFiles[0].name) == "Test Scenario"
-        expect(featureFiles[1].name) == "Test Scenario 2"
+        expect(featureFiles[0].description) == "Google Searching"
+        expect(featureFiles[0].scenarios.count) == 2
+        expect(featureFiles[1].description) == "Verify billing"
+        expect(featureFiles[1].scenarios.count) == 2
     }
     
     func testItCanReadMultipleFeatureFilesWithIncludedTags() {
-        write(fileContent: testFeatureFile1Content(), toPath: testFile1Path)
-        write(fileContent: testFeatureFile2Content(), toPath: testFile2Path)
-        write(fileContent: testFeatureFile3Content(), toPath: testFile3Path)
+        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
+        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
+        write(fileContent: testFeatureFileWithTag(), toPath: testFile3Path)
         
-        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: ["included"], excludedTags: nil)
+        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: ["fast"], excludedTags: nil)
         
-        expect(featureFiles.count) == 2
-        expect(featureFiles[0].name) == "Test Scenario 2"
-        expect(featureFiles[1].name) == "Test Scenario 3"
+        expect(featureFiles.count) == 1
+        expect(featureFiles[0].description) == "Verify billing"
+        expect(featureFiles[0].scenarios.count) == 2
+        
+        let featuresFiles2 = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: ["fast", "important"], excludedTags: nil)
+        
+        expect(featuresFiles2.count) == 2
+        expect(featuresFiles2[0].description) == "Verify billing"
+        expect(featuresFiles2[0].scenarios.count) == 2
+        expect(featuresFiles2[1].scenarios.count) == 1
+        expect(featuresFiles2[1].scenarios[0].description) == "Mario jumps"
     }
     
-    func testItCanReadMultipleFeatureFilesWithdExcludedTags() {
-        write(fileContent: testFeatureFile1Content(), toPath: testFile1Path)
-        write(fileContent: testFeatureFile2Content(), toPath: testFile2Path)
-        write(fileContent: testFeatureFile3Content(), toPath: testFile3Path)
+    func testItCanReadMultipleFeatureFilesWithExcludedTags() {
+        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
+        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
+        write(fileContent: testFeatureFileWithTag(), toPath: testFile3Path)
         
-        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: nil, excludedTags: ["excluded"])
+        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: nil, excludedTags: ["fast"])
         
         expect(featureFiles.count) == 2
-        expect(featureFiles[0].name) == "Test Scenario"
-        expect(featureFiles[1].name) == "Test Scenario 2"
+        expect(featureFiles[0].description) == "Google Searching"
+        expect(featureFiles[1].description) == "SNES Mario Controls"
+        
+        let featuresFiles2 = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: nil, excludedTags: ["fast", "important"])
+        
+        expect(featuresFiles2.count) == 2
+        expect(featuresFiles2[0].description) == "Google Searching"
+        expect(featuresFiles2[0].scenarios.count) == 2
+        expect(featuresFiles2[1].scenarios.count) == 1
+        expect(featuresFiles2[1].scenarios[0].description) == "Star power"
     }
     
     func testItCanReadMultipleFeatureFilesWithIncludedAndExcludedTags() {
-        write(fileContent: testFeatureFile1Content(), toPath: testFile1Path)
-        write(fileContent: testFeatureFile2Content(), toPath: testFile2Path)
-        write(fileContent: testFeatureFile3Content(), toPath: testFile3Path)
+        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
+        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
+        write(fileContent: testFeatureFileWithTag(), toPath: testFile3Path)
         
-        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: ["included"], excludedTags: ["excluded"])
+        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: ["fast"], excludedTags: ["important"])
         
         expect(featureFiles.count) == 1
-        expect(featureFiles[0].name) == "Test Scenario 2"
+        expect(featureFiles[0].description) == "Verify billing"
+        expect(featureFiles[0].scenarios.count) == 1
+        expect(featureFiles[0].scenarios[0].description) == "Several products"
+        
+        let featuresFiles2 = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: ["important"], excludedTags: ["fast"])
+        
+        expect(featuresFiles2.count) == 1
+        expect(featuresFiles2[0].description) == "SNES Mario Controls"
+        expect(featuresFiles2[0].scenarios.count) == 1
+        expect(featuresFiles2[0].scenarios[0].description) == "Mario jumps"
+    }
+    
+    func testItCanReadMultipleFileNames() {
+        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
+        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
+        write(fileContent: testFeatureFileWithTag(), toPath: testFile3Path)
+        
+        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: nil, excludedTags: nil)
+        
+        expect(featureFiles.count) == 3
+        expect(featureFiles[0].fileName) == "Test1"
+        expect(featureFiles[1].fileName) == "Test2"
+        expect(featureFiles[2].fileName) == "Test3"
+    }
+    
+    func testItCanReadMultipleFilesFromDifferentFolders() {
+        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
+        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
+        write(fileContent: testFeatureFileWithTag(), toPath: testFile4DesktopPath)
+        
+        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile4DesktopPath], includedTags: nil, excludedTags: nil)
+        
+        expect(featureFiles.count) == 3
+        expect(featureFiles[0].fileName) == "Test1"
+        expect(featureFiles[1].fileName) == "Test2"
+        expect(featureFiles[2].fileName) == "Test4"
     }
 }
 
 private extension FeatureFilesReaderTests {
-    private var basePath: String {
+    private var documentsPath: String {
         return NSSearchPathForDirectoriesInDomains(.documentDirectory,
                                                    .userDomainMask,
                                                    true).first! + "/"
     }
     
+    private var desktopPath: String {
+        return NSSearchPathForDirectoriesInDomains(.desktopDirectory,
+                                                   .userDomainMask,
+                                                   true).first! + "/"
+    }
+    
     private var testFile1Path: String {
-        return basePath + "test1.feature"
+        return documentsPath + "test1.feature"
     }
     
     private var testFile2Path: String {
-        return basePath + "test2.feature"
+        return documentsPath + "test2.feature"
     }
     
     private var testFile3Path: String {
-        return basePath + "test3.feature"
+        return documentsPath + "test3.feature"
     }
     
-    private func testFeatureFile1Content() -> String {
+    private var testFile4DesktopPath: String {
+        return desktopPath + "test4.feature"
+    }
+    
+    private func testFeatureFileWithoutTag() -> String {
         return """
-        Feature: Test Scenario
+        Feature: Google Searching
         
-        Scenario: test scenario
-        Given I have to do a test
-        And I'm a developer
+        Scenario: Search website
+        Given Google search results for "panda" are shown
+        
+        Scenario: Search image
+        Given Google image results for "fox" are shown
         """
     }
     
-    private func testFeatureFile2Content() -> String {
+    private func testFeatureFileWithTags() -> String {
         return """
-        Feature: Test Scenario 2
+        @fast
+        Feature: Verify billing
         
-        @included
-        Scenario: test scenario 2
-        Given I have to do another test
-        And I'm the same developer i was before
+        @important
+        Scenario: Missing product description
+        Given Missing product
+        
+        Scenario: Several products
+        Given Products
         """
     }
     
-    private func testFeatureFile3Content() -> String {
+    private func testFeatureFileWithTag() -> String {
         return """
-        Feature: Test Scenario 3
+        Feature: SNES Mario Controls
         
-        @included @excluded
-        Scenario: test scenario 3
-        Given I have to do another test
-        And I will use it just for tags
+        @important
+        Scenario: Mario jumps
+        Given Mario not jumping
+        
+        Scenario: Star power
+        Given Mario has powers
         """
     }
     

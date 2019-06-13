@@ -5,7 +5,7 @@
 
 Capriccio is a tool to generate UI Tests from gherkins `.feature` files.
 
-Capriccio generates test files using [XCTest-Gherkin](https://github.com/net-a-porter-mobile/XCTest-Gherkin)
+Capriccio generates test files using [XCTest-Gherkin](https://github.com/net-a-porter-mobile/XCTest-Gherkin) by default, but can use your own Stencil template :)
 
 # An example of how it works
 If you have a feature files like
@@ -64,6 +64,32 @@ capriccio source destination <option>
 ```
 **source**                  The path to the folder that contains the feature files
 **destination**             The path to the folder where the swift files will be generated
+
+## Command line options
+- `--excluded-tags` - The list of excluded tags separated by a comma
+- `--included-tags` - The list of included tags separated by a comma
+- `--class-type` [default: XCTestCase] - The class type of the generated class
+- `--single-file` - Generates a single swift file with the content of all the feature files
+- `--disable-swiflint` - Disables swiftlint on the file
+- `--template-file` - Path to the stencil template file
+
+## Configuration file
+Instead of CLI arguments you can use `.capriccio.yml` configuration file:
+
+```yml
+source: <source path>
+output: <destination path>
+template: <template path>
+excludedTags:
+    - <string value>
+    - <string value>
+includedTags:
+    - <string value>
+    - <string value>
+classType: <string value>
+singleFile: <bool value>
+disableSwiftLint: <bool value>
+```
 
 # Personalise setUp and tearDown
 Your UI Tests will probably need to do something that is specific to your code base before and after every test.
@@ -141,3 +167,6 @@ final class FeatureNumberOne: XCTestCase {
     }
 }
 ```
+
+# Create your own template
+Check our [Model class](https://github.com/shibapm/capriccio/blob/master/Sources/CapriccioLib/Gherkin%2BSwiftCode.swift) to see which properties you can use on your Stencil template.

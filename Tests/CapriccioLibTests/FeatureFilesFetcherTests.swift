@@ -33,6 +33,13 @@ final class FeatureFilesFetcherTests: XCTestCase {
         expect(self.mockFileManager).to(haveReceived(.contentsOfDirectory(path: testPath)))
     }
     
+    func testItReturnsTheFoundYAMLFiles() {
+        let yamlFiles = [".capriccio.yml"]
+        mockFileManager.contentOfDirectoryResult = yamlFiles
+        let result = featureFilesFetcher.yamlFile()
+        expect(result) == yamlFiles.map { "./" + $0 }.first
+    }
+    
     func testItReturnsTheFoundFeatureFiles() {
         let testPath = "testPath"
         let featureFiles = ["file1.feature",

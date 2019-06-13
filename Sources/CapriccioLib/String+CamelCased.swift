@@ -14,12 +14,17 @@ enum ValidEntryNameStringType {
 
 extension String {
     func validEntityName() -> String {
-        let result = removeNotValidCharacters()
+        var result = removeKeyWords()
+        result = result.removeNotValidCharacters()
         return result.upperCamelCased
     }
     
     func removeNotValidCharacters() -> String {
         return replacingOccurrences(of: "([^A-Za-z0-9 ]*)", with: "", options:.regularExpression)
+    }
+    
+    func removeKeyWords() -> String {
+        return replacingOccurrences(of: "\\s?<[\\w\\s]*>", with: "", options:.regularExpression)
     }
     
     var upperCamelCased: String {
