@@ -36,8 +36,12 @@ public struct Feature: Encodable, Equatable {
         self.tags = tags
     }
     
-    mutating func update(fileName: String) {
-        self.fileName = fileName
+    func withFileName(_ fileName: String) -> Feature {
+        return Feature(fileName: fileName,
+                       description: description,
+                       name: name,
+                       scenarios: scenarios,
+                       tags: tags)
     }
 }
 
@@ -64,7 +68,7 @@ public struct Scenario: Encodable, Equatable {
         let examples: [Example] = (gherkinScenario.examples?.compactMap(Example.init) ?? []).compactMap { example in
             var exampleCopy = example
             for step in steps {
-                exampleCopy.replaceDescriptionKeyword(on: step)
+                exampleCopy = exampleCopy.withKeywordReplaced(on: step)
             }
             return exampleCopy
         }
@@ -116,8 +120,15 @@ public struct Example: Encodable, Equatable {
         valuesDescription = allValues.joined(separator: "And")
     }
     
-    mutating func replaceDescriptionKeyword(on step: Step) {
+    init(valuesDescription: String, values: [String: String], steps: [Step]) {
+        self.valuesDescription = valuesDescription
+        self.values = values
+        self.steps = steps
+    }
+    
+    func withKeywordReplaced(on step: Step) -> Example {
         var step = step
+        var steps = self.steps
         
         var text = step.description
         var parameters: [Parameter] = []
@@ -134,6 +145,9 @@ public struct Example: Encodable, Equatable {
         step.parameters = parameters
         
         steps.append(step)
+        return Example(valuesDescription: valuesDescription,
+                       values: values,
+                       steps: steps)
     }
 }
 

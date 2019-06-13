@@ -16,11 +16,11 @@ public final class FeatureFilesReader {
         let filesContent = paths.compactMap { try? String(contentsOfFile: $0).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
         
         let newText: [String] = trimLines(from: filesContent)
-        let gherkinFeatures = newText.compactMap { try! Gherkin.Feature($0) }
+        let gherkinFeatures = newText.compactMap { try? Gherkin.Feature($0) }
         var features = gherkinFeatures.compactMap(Feature.init)
         
         for i in 0..<fileNames.count {
-            features[i].fileName = fileNames[i]
+            features[i] = features[i].withFileName(fileNames[i])
         }
         
         if includedTags != nil || excludedTags != nil {
