@@ -23,6 +23,7 @@ final class FeatureFilesReaderTests: XCTestCase {
         try? FileManager.default.removeItem(atPath: testFile1Path)
         try? FileManager.default.removeItem(atPath: testFile2Path)
         try? FileManager.default.removeItem(atPath: testFile3Path)
+        try? FileManager.default.removeItem(atPath: testFile4DesktopPath)
         super.tearDown()
     }
     
@@ -108,25 +109,61 @@ final class FeatureFilesReaderTests: XCTestCase {
         expect(featuresFiles2[0].scenarios.count) == 1
         expect(featuresFiles2[0].scenarios[0].description) == "Mario jumps"
     }
+    
+    func testItCanReadMultipleFileNames() {
+        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
+        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
+        write(fileContent: testFeatureFileWithTag(), toPath: testFile3Path)
+        
+        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: nil, excludedTags: nil)
+        
+        expect(featureFiles.count) == 3
+        expect(featureFiles[0].fileName) == "Test1"
+        expect(featureFiles[1].fileName) == "Test2"
+        expect(featureFiles[2].fileName) == "Test3"
+    }
+    
+    func testItCanReadMultipleFilesFromDifferentFolders() {
+        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
+        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
+        write(fileContent: testFeatureFileWithTag(), toPath: testFile4DesktopPath)
+        
+        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile4DesktopPath], includedTags: nil, excludedTags: nil)
+        
+        expect(featureFiles.count) == 3
+        expect(featureFiles[0].fileName) == "Test1"
+        expect(featureFiles[1].fileName) == "Test2"
+        expect(featureFiles[2].fileName) == "Test4"
+    }
 }
 
 private extension FeatureFilesReaderTests {
-    private var basePath: String {
+    private var documentsPath: String {
         return NSSearchPathForDirectoriesInDomains(.documentDirectory,
                                                    .userDomainMask,
                                                    true).first! + "/"
     }
     
+    private var desktopPath: String {
+        return NSSearchPathForDirectoriesInDomains(.desktopDirectory,
+                                                   .userDomainMask,
+                                                   true).first! + "/"
+    }
+    
     private var testFile1Path: String {
-        return basePath + "test1.feature"
+        return documentsPath + "test1.feature"
     }
     
     private var testFile2Path: String {
-        return basePath + "test2.feature"
+        return documentsPath + "test2.feature"
     }
     
     private var testFile3Path: String {
-        return basePath + "test3.feature"
+        return documentsPath + "test3.feature"
+    }
+    
+    private var testFile4DesktopPath: String {
+        return desktopPath + "test4.feature"
     }
     
     private func testFeatureFileWithoutTag() -> String {
