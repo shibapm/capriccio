@@ -12,11 +12,11 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/FelipeDocil/SwiftGherkin", .branch("support_comments")),
-        .package(url: "https://github.com/stencilproject/Stencil", from: "0.12.1"),
-        .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.1.0"),
-        .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
-        .package(url: "https://github.com/Quick/Nimble", from: "8.0.0"), // dev
-        .package(url: "https://github.com/f-meloni/TestSpy", from: "0.4.0"), // dev
+        .package(url: "https://github.com/stencilproject/Stencil", .exact("0.13.1")),
+        .package(url: "https://github.com/apple/swift-package-manager.git", .exact("0.3.0")),
+        .package(url: "https://github.com/jpsim/Yams.git", .exact("2.0.0")),
+        .package(url: "https://github.com/Quick/Nimble", .exact("8.0.2")), // dev
+        .package(url: "https://github.com/f-meloni/TestSpy", .exact("0.4.0")), // dev
         .package(url: "https://github.com/shibapm/Rocket", from: "0.9.0") // dev
     ],
     targets: [
