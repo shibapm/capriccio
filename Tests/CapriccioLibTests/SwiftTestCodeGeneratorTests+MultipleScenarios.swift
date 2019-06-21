@@ -127,13 +127,13 @@ extension SwiftTestCodeGeneratorTests {
                 stepDefiner.stepSomethingHappens()
             }
             
-            func testScenario_IWantAComplexTest_TestaAndSituationa() {
+            func testScenario_IWantAComplexTest_TestAAndSituationA() {
                 stepDefiner.stepImInASituation()
                 stepDefiner.stepSomethingHappens(a: "testA")
                 stepDefiner.stepJustHappened(b: "situationA")
             }
 
-            func testScenario_IWantAComplexTest_TestbAndSituationb() {
+            func testScenario_IWantAComplexTest_TestBAndSituationB() {
                 stepDefiner.stepImInASituation()
                 stepDefiner.stepSomethingHappens(a: "testB")
                 stepDefiner.stepJustHappened(b: "situationB")
