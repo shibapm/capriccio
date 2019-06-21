@@ -12,160 +12,114 @@ import Nimble
 
 final class FeatureFilesReaderTests: XCTestCase {
     var featureFilesReader: FeatureFilesReader!
+    private var paths: Paths!
     
     override func setUp() {
         super.setUp()
         featureFilesReader = FeatureFilesReader()
+        writeAllFiles()
     }
     
     override func tearDown() {
         featureFilesReader = nil
-        try? FileManager.default.removeItem(atPath: testFile1Path)
-        try? FileManager.default.removeItem(atPath: testFile2Path)
-        try? FileManager.default.removeItem(atPath: testFile3Path)
-        try? FileManager.default.removeItem(atPath: testFile4DesktopPath)
+        removeAllFiles()
         super.tearDown()
     }
     
     func testItCanReadSingleFeatureFile() {
-        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
-        
-        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path], includedTags: nil, excludedTags: nil)
+        let featureFiles = featureFilesReader.readFiles(sourcePath: paths.single.folder, atPaths: paths.single.files, includedTags: nil, excludedTags: nil)
         
         expect(featureFiles.count) == 1
-        expect(featureFiles[0].description) == "Google Searching"
-        expect(featureFiles[0].scenarios.count) == 2
+        expect(featureFiles[0].feature.description) == "Google Searching"
+        expect(featureFiles[0].feature.scenarios.count) == 2
     }
     
     func testItCanReadMultipleFeatureFiles() {
-        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
-        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
+        let sortedFiles = paths.all.files.sorted()
+        let featureFiles = featureFilesReader.readFiles(sourcePath: paths.all.folder, atPaths: sortedFiles, includedTags: nil, excludedTags: nil)
         
-        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path], includedTags: nil, excludedTags: nil)
-        
-        expect(featureFiles.count) == 2
-        expect(featureFiles[0].description) == "Google Searching"
-        expect(featureFiles[0].scenarios.count) == 2
-        expect(featureFiles[1].description) == "Verify billing"
-        expect(featureFiles[1].scenarios.count) == 2
+        expect(featureFiles.count) == 3
+        expect(featureFiles[0].feature.description) == "Verify billing"
+        expect(featureFiles[0].feature.scenarios.count) == 2
+        expect(featureFiles[1].feature.description) == "Google Searching"
+        expect(featureFiles[1].feature.scenarios.count) == 2
+        expect(featureFiles[2].feature.description) == "SNES Mario Controls"
+        expect(featureFiles[2].feature.scenarios.count) == 2
     }
     
     func testItCanReadMultipleFeatureFilesWithIncludedTags() {
-        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
-        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
-        write(fileContent: testFeatureFileWithTag(), toPath: testFile3Path)
-        
-        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: ["fast"], excludedTags: nil)
+        let sortedFiles = paths.all.files.sorted()
+        let featureFiles = featureFilesReader.readFiles(sourcePath: paths.all.folder, atPaths: sortedFiles, includedTags: ["fast"], excludedTags: nil)
         
         expect(featureFiles.count) == 1
-        expect(featureFiles[0].description) == "Verify billing"
-        expect(featureFiles[0].scenarios.count) == 2
+        expect(featureFiles[0].feature.description) == "Verify billing"
+        expect(featureFiles[0].feature.scenarios.count) == 2
         
-        let featuresFiles2 = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: ["fast", "important"], excludedTags: nil)
+        let featuresFiles2 = featureFilesReader.readFiles(sourcePath: paths.all.folder, atPaths: sortedFiles, includedTags: ["fast", "important"], excludedTags: nil)
         
         expect(featuresFiles2.count) == 2
-        expect(featuresFiles2[0].description) == "Verify billing"
-        expect(featuresFiles2[0].scenarios.count) == 2
-        expect(featuresFiles2[1].scenarios.count) == 1
-        expect(featuresFiles2[1].scenarios[0].description) == "Mario jumps"
+        expect(featuresFiles2[0].feature.description) == "Verify billing"
+        expect(featuresFiles2[0].feature.scenarios.count) == 2
+        expect(featuresFiles2[1].feature.scenarios.count) == 1
+        expect(featuresFiles2[1].feature.scenarios[0].description) == "Mario jumps"
     }
     
     func testItCanReadMultipleFeatureFilesWithExcludedTags() {
-        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
-        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
-        write(fileContent: testFeatureFileWithTag(), toPath: testFile3Path)
-        
-        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: nil, excludedTags: ["fast"])
+        let sortedFiles = paths.all.files.sorted()
+        let featureFiles = featureFilesReader.readFiles(sourcePath: paths.all.folder, atPaths: sortedFiles, includedTags: nil, excludedTags: ["fast"])
         
         expect(featureFiles.count) == 2
-        expect(featureFiles[0].description) == "Google Searching"
-        expect(featureFiles[1].description) == "SNES Mario Controls"
+        expect(featureFiles[0].feature.description) == "Google Searching"
+        expect(featureFiles[1].feature.description) == "SNES Mario Controls"
         
-        let featuresFiles2 = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: nil, excludedTags: ["fast", "important"])
+        let featuresFiles2 = featureFilesReader.readFiles(sourcePath: paths.all.folder, atPaths: sortedFiles, includedTags: nil, excludedTags: ["fast", "important"])
         
         expect(featuresFiles2.count) == 2
-        expect(featuresFiles2[0].description) == "Google Searching"
-        expect(featuresFiles2[0].scenarios.count) == 2
-        expect(featuresFiles2[1].scenarios.count) == 1
-        expect(featuresFiles2[1].scenarios[0].description) == "Star power"
+        expect(featuresFiles2[0].feature.description) == "Google Searching"
+        expect(featuresFiles2[0].feature.scenarios.count) == 2
+        expect(featuresFiles2[1].feature.scenarios.count) == 1
+        expect(featuresFiles2[1].feature.scenarios[0].description) == "Star power"
     }
     
     func testItCanReadMultipleFeatureFilesWithIncludedAndExcludedTags() {
-        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
-        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
-        write(fileContent: testFeatureFileWithTag(), toPath: testFile3Path)
-        
-        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: ["fast"], excludedTags: ["important"])
+        let sortedFiles = paths.all.files.sorted()
+        let featureFiles = featureFilesReader.readFiles(sourcePath: paths.all.folder, atPaths: sortedFiles, includedTags: ["fast"], excludedTags: ["important"])
         
         expect(featureFiles.count) == 1
-        expect(featureFiles[0].description) == "Verify billing"
-        expect(featureFiles[0].scenarios.count) == 1
-        expect(featureFiles[0].scenarios[0].description) == "Several products"
+        expect(featureFiles[0].feature.description) == "Verify billing"
+        expect(featureFiles[0].feature.scenarios.count) == 1
+        expect(featureFiles[0].feature.scenarios[0].description) == "Several products"
         
-        let featuresFiles2 = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: ["important"], excludedTags: ["fast"])
+        let featuresFiles2 = featureFilesReader.readFiles(sourcePath: paths.all.folder, atPaths: sortedFiles, includedTags: ["important"], excludedTags: ["fast"])
         
         expect(featuresFiles2.count) == 1
-        expect(featuresFiles2[0].description) == "SNES Mario Controls"
-        expect(featuresFiles2[0].scenarios.count) == 1
-        expect(featuresFiles2[0].scenarios[0].description) == "Mario jumps"
+        expect(featuresFiles2[0].feature.description) == "SNES Mario Controls"
+        expect(featuresFiles2[0].feature.scenarios.count) == 1
+        expect(featuresFiles2[0].feature.scenarios[0].description) == "Mario jumps"
     }
     
     func testItCanReadMultipleFileNames() {
-        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
-        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
-        write(fileContent: testFeatureFileWithTag(), toPath: testFile3Path)
-        
-        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile3Path], includedTags: nil, excludedTags: nil)
+        let sortedFiles = paths.all.files.sorted()
+        let featureFiles = featureFilesReader.readFiles(sourcePath: paths.all.folder, atPaths: sortedFiles, includedTags: nil, excludedTags: nil)
         
         expect(featureFiles.count) == 3
-        expect(featureFiles[0].fileName) == "Test1"
-        expect(featureFiles[1].fileName) == "Test2"
-        expect(featureFiles[2].fileName) == "Test3"
+        expect(featureFiles[0].fileName) == "Billing"
+        expect(featureFiles[1].fileName) == "Google"
+        expect(featureFiles[2].fileName) == "Mario"
     }
     
     func testItCanReadMultipleFilesFromDifferentFolders() {
-        write(fileContent: testFeatureFileWithoutTag(), toPath: testFile1Path)
-        write(fileContent: testFeatureFileWithTags(), toPath: testFile2Path)
-        write(fileContent: testFeatureFileWithTag(), toPath: testFile4DesktopPath)
-        
-        let featureFiles = featureFilesReader.readFiles(atPaths: [testFile1Path, testFile2Path, testFile4DesktopPath], includedTags: nil, excludedTags: nil)
+        let sortedFiles = paths.nested.files.sorted()
+        let featureFiles = featureFilesReader.readFiles(sourcePath: paths.nested.folder, atPaths: sortedFiles, includedTags: nil, excludedTags: nil)
         
         expect(featureFiles.count) == 3
-        expect(featureFiles[0].fileName) == "Test1"
-        expect(featureFiles[1].fileName) == "Test2"
-        expect(featureFiles[2].fileName) == "Test4"
+        expect(featureFiles[0].fileName) == "Billing"
+        expect(featureFiles[1].fileName) == "Mario"
+        expect(featureFiles[2].fileName) == "Search_Google"
     }
 }
 
 private extension FeatureFilesReaderTests {
-    private var documentsPath: String {
-        return NSSearchPathForDirectoriesInDomains(.documentDirectory,
-                                                   .userDomainMask,
-                                                   true).first! + "/"
-    }
-    
-    private var desktopPath: String {
-        return NSSearchPathForDirectoriesInDomains(.desktopDirectory,
-                                                   .userDomainMask,
-                                                   true).first! + "/"
-    }
-    
-    private var testFile1Path: String {
-        return documentsPath + "test1.feature"
-    }
-    
-    private var testFile2Path: String {
-        return documentsPath + "test2.feature"
-    }
-    
-    private var testFile3Path: String {
-        return documentsPath + "test3.feature"
-    }
-    
-    private var testFile4DesktopPath: String {
-        return desktopPath + "test4.feature"
-    }
-    
     private func testFeatureFileWithoutTag() -> String {
         return """
         Feature: Google Searching
@@ -205,7 +159,89 @@ private extension FeatureFilesReaderTests {
         """
     }
     
-    private func write(fileContent: String, toPath path: String) {
-        try! fileContent.write(toFile: path, atomically: true, encoding: .utf8)
+    private struct Paths {
+        let single: (folder: String, files: [String])
+        let all: (folder: String, files: [String])
+        let nested: (folder: String, files: [String])
+    }
+    
+    private var documentsPath: String {
+        return NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! + "/"
+    }
+    
+    private var rootPath: String {
+        return "capriccioFeaturesTest/"
+    }
+    
+    private func writeAllFiles() {
+        
+        /**
+         | capriccioFeaturesTest
+         | - single
+         | - - google.feature
+         | - all
+         | - - billing.feature
+         | - - google.feature
+         | - - mario.feature
+         | - nested
+         | - - mario.feature
+         | - - search
+         | - - - google.feature
+         | - - billing
+         | - - - billing.feature
+         */
+        
+        let rootFolder = documentsPath + rootPath
+        let single = rootFolder + "single/"
+        let all = rootFolder + "all/"
+        let nested = rootFolder + "nested/"
+        let nestedSearch = nested + "search/"
+        let nestedBilling = nested + "billing/"
+        
+        let folders = [single, all, nestedSearch, nestedBilling]
+        for folder in folders {
+            try! FileManager.default.createDirectory(atPath: folder, withIntermediateDirectories: true, attributes: nil)
+        }
+        
+        let mario = (path: "mario.feature", code: testFeatureFileWithTag())
+        let billing = (path: "billing.feature", code: testFeatureFileWithTags())
+        let google = (path: "google.feature", code: testFeatureFileWithoutTag())
+        
+        let singleFeature = [
+            (path: single + google.path, code: google.code)
+        ]
+        
+        let allFeatures = [
+            (path: all + google.path, code: google.code),
+            (path: all + mario.path, code: mario.code),
+            (path: all + billing.path, code: billing.code)
+        ]
+        
+        let nestedFeatures = [
+            (path: nestedSearch + google.path, code: google.code),
+            (path: nested + mario.path, code: mario.code),
+            (path: nestedBilling + billing.path, code: billing.code)
+        ]
+        
+        var features = singleFeature
+        features.append(contentsOf: allFeatures)
+        features.append(contentsOf: nestedFeatures)
+        
+        for feature in features {
+            try! feature.code.write(toFile: feature.path, atomically: true, encoding: .utf8)
+        }
+        
+        self.paths = Paths(single: (folder: single, files: singleFeature.map { remove(folder: single, from: $0.0) }),
+                           all: (folder: all, files: allFeatures.map { remove(folder: all, from: $0.0) }),
+                           nested: (folder: nested, files: nestedFeatures.map { remove(folder: nested, from: $0.0) }))
+    }
+    
+    private func removeAllFiles() {
+        let rootFolder = documentsPath + rootPath
+        try! FileManager.default.removeItem(atPath: rootFolder)
+    }
+    
+    private func remove(folder: String, from feature: String) -> String {
+        return feature.replacingOccurrences(of: folder, with: "")
     }
 }
