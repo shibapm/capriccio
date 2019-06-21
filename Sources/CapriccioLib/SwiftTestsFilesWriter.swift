@@ -6,6 +6,7 @@
 //
 
 import Gherkin
+import Foundation
 
 public final class SwiftTestsFilesWriter {
     let swiftCodeGenerator: SwiftTestCodeGenerating
@@ -19,15 +20,15 @@ public final class SwiftTestsFilesWriter {
         self.codeWriter = codeWriter
     }
     
-    public func writeSwiftTest(fromFeatures features: [Feature], inFolder folderPath: String, generatedClassType: String?, disableSwiftLint: Bool, templateFilePath: String?, useSingleFile: Bool, version: String) {
+    public func writeSwiftTest(fromFeatures features: [Metadata], inFolder folderPath: String, generatedClassType: String?, disableSwiftLint: Bool, templateFilePath: String?, useSingleFile: Bool, version: String) {
         
-        let featuresCode = features.map { swiftCodeGenerator.generateSwiftTestCode(forFeature: $0, generatedClassType: generatedClassType, templateFilePath: templateFilePath, disableSwiftLint: disableSwiftLint, version: version) }
+        let featuresCode = features.map { swiftCodeGenerator.generateSwiftTestCode(forFeature: $0.feature, generatedClassType: generatedClassType, templateFilePath: templateFilePath, disableSwiftLint: disableSwiftLint, version: version) }
         
         if useSingleFile {
             writeSingleFile(fromFeaturesCode: featuresCode, folderPath: folderPath)
         }
         else {
-            writeFeatureFiles(fromFeaturesCode: featuresCode, features: features, folderPath: folderPath)
+            writeFeatureFiles(fromFeaturesCode: featuresCode, metadatas: features, folderPath: folderPath)
         }
     }
     
@@ -38,14 +39,17 @@ public final class SwiftTestsFilesWriter {
         write(code: singleFileCode, toFile: singleFilePath)
     }
     
-    private func writeFeatureFiles(fromFeaturesCode featuresCode: [String], features: [Feature], folderPath: String) {
-        for i in 0..<features.count {
+    private func writeFeatureFiles(fromFeaturesCode featuresCode: [String], metadatas: [Metadata], folderPath: String) {
+        for i in 0..<metadatas.count {
             let code = featuresCode[i]
-            let feature = features[i]
+            let metadata = metadatas[i]
             
-            let fileName = feature.fileName ?? feature.name
-            let featureFilePath = folderPath.appending("/" + fileName.validEntityName() + "UITests.generated.swift")
-            write(code: code, toFile: featureFilePath)
+            let fileName = metadata.fileName
+            let output = metadata.path
+            let featureFilePath = folderPath.appending("/" + output + fileName + "UITests.generated.swift")
+            
+            let directory = folderPath.appending("/" + output)
+            codeWriter.writeAndCreate(code: code, toFile: featureFilePath, toDirectory: directory)
         }
     }
     
@@ -61,10 +65,20 @@ public final class SwiftTestsFilesWriter {
 
 public protocol CodeWriting {
     func write(code: String, toFile featureFilePath: String)
+    func writeAndCreate(code: String, toFile filePath: String, toDirectory directoryPath: String)
 }
 
 public final class CodeWriter: CodeWriting {
     public init() {}
+    
+    public func writeAndCreate(code: String, toFile filePath: String, toDirectory directoryPath: String) {
+        do {
+            try FileManager.default.createDirectory(atPath: directoryPath, withIntermediateDirectories: true, attributes: nil)
+            try code.write(toFile: filePath, atomically: false, encoding: .utf8)
+        } catch {
+            print("Unable to save the generated UI Tests file, error: \(error)")
+        }
+    }
     
     public func write(code: String, toFile featureFilePath: String) {
         do {
