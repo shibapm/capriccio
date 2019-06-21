@@ -28,9 +28,9 @@ final class FeatureFilesFetcherTests: XCTestCase {
     
     func testItCallsTheFileManagerWithTheCorrectPath() {
         let testPath = "testPath"
-        mockFileManager.contentOfDirectoryResult = []
+        mockFileManager.subpathsOfDirectoryResult = []
         _ = featureFilesFetcher.featureFiles(atPath: testPath)
-        expect(self.mockFileManager).to(haveReceived(.contentsOfDirectory(path: testPath)))
+        expect(self.mockFileManager).to(haveReceived(.subpathsOfDirectory(path: testPath)))
     }
     
     func testItReturnsTheFoundYAMLFiles() {
@@ -45,9 +45,9 @@ final class FeatureFilesFetcherTests: XCTestCase {
         let featureFiles = ["file1.feature",
                             "file2.feature",
                             "file3.feature"]
-        mockFileManager.contentOfDirectoryResult = featureFiles
+        mockFileManager.subpathsOfDirectoryResult = featureFiles
         let result = featureFilesFetcher.featureFiles(atPath: testPath)
-        expect(result) == featureFiles.map { testPath + "/" + $0 }
+        expect(result) == featureFiles.map { $0 }
     }
     
     func testItFiltersOutTheNotFeatureFiles() {
@@ -57,8 +57,8 @@ final class FeatureFilesFetcherTests: XCTestCase {
                             "file3.feature"]
         var files = ["/file4.jpg"]
         files.append(contentsOf: featureFiles)
-        mockFileManager.contentOfDirectoryResult = files
+        mockFileManager.subpathsOfDirectoryResult = files
         let result = featureFilesFetcher.featureFiles(atPath: testPath)
-        expect(result) == featureFiles.map { testPath + "/" + $0 }
+        expect(result) == featureFiles.map { $0 }
     }
 }

@@ -8,14 +8,12 @@
 import Gherkin
 
 /**
- fileName: File name where the feature came from
  description: Following text after `Feature:`
  name: description but without space and uppercased
  scenarios: List of Scenario
  tags: list of tags on that Feature
  */
 public struct Feature: Encodable, Equatable {
-    var fileName: String?
     var description: String
     var name: String
     var scenarios: [Scenario]
@@ -28,20 +26,11 @@ public struct Feature: Encodable, Equatable {
         tags = gherkinFeature.tags?.compactMap(Tag.init) ?? []
     }
     
-    init(fileName: String?, description: String, name: String, scenarios: [Scenario], tags: [Tag]) {
-        self.fileName = fileName
+    init(description: String, name: String, scenarios: [Scenario], tags: [Tag]) {
         self.description = description
         self.name = name
         self.scenarios = scenarios
         self.tags = tags
-    }
-    
-    func withFileName(_ fileName: String) -> Feature {
-        return Feature(fileName: fileName,
-                       description: description,
-                       name: name,
-                       scenarios: scenarios,
-                       tags: tags)
     }
 }
 

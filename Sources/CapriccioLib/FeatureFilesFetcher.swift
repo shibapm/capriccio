@@ -18,12 +18,12 @@ public final class FeatureFilesFetcher {
         let directoryContents: [String]
         
         do {
-            directoryContents = try fileManager.contentsOfDirectory(atPath: path)
+            directoryContents = try fileManager.subpathsOfDirectory(atPath: path)
         } catch {
             fatalError("Unable to get files list at path \(path)")
         }
         
-        return directoryContents.filter { $0.hasSuffix(".feature") }.map { path + "/" + $0 }
+        return directoryContents.filter { $0.hasSuffix(".feature") }
     }
     
     public func yamlFile() -> String? {
