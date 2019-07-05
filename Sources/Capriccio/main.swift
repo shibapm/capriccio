@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Utility
+import SPMUtility
 import CapriccioLib
 
 let capriccioVersion = "1.0.0"

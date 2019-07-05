@@ -5,7 +5,7 @@
 //  Created by Franco on 05/09/2018.
 //
 import Foundation
-import Utility
+import SPMUtility
 import Yams
 
 final class CapriccioArgumentsParser {
