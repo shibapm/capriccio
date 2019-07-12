@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Utility
+import SPMUtility
 import CapriccioLib
 
 let capriccioVersion = "1.0.0"
@@ -26,7 +26,7 @@ let destination = arguments.destination
 let featureFiles = filesFetcher.featureFiles(atPath: source)
 
 let filesReader = FeatureFilesReader()
-let features = filesReader.readFiles(atPaths: featureFiles, includedTags: arguments.includedTags, excludedTags: arguments.excludedTags)
+let features = filesReader.readFiles(sourcePath: source, atPaths: featureFiles, includedTags: arguments.includedTags, excludedTags: arguments.excludedTags)
 
 let filesWriter = SwiftTestsFilesWriter()
 filesWriter.writeSwiftTest(fromFeatures: features, inFolder: destination, generatedClassType: arguments.generatedClassType, disableSwiftLint: arguments.disableSwiftLint, templateFilePath: arguments.templateFilePath, useSingleFile: arguments.useSingleFile, version: capriccioVersion)

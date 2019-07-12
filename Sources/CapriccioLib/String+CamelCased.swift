@@ -30,7 +30,7 @@ extension String {
     var upperCamelCased: String {
         let words = split(separator: " ")
         return words.map { word in
-            return word.capitalized
+            return word.prefix(1).uppercased() + word.dropFirst()
         }.joined()
     }
 }
