@@ -20,15 +20,15 @@ public final class SwiftTestsFilesWriter {
         self.codeWriter = codeWriter
     }
     
-    public func writeSwiftTest(fromFeatures features: [Metadata], inFolder folderPath: String, generatedClassType: String?, disableSwiftLint: Bool, templateFilePath: String?, useSingleFile: Bool, version: String) {
+    public func writeSwiftTest(fromFeatures metadatas: [Metadata], inFolder folderPath: String, generatedClassType: String?, disableSwiftLint: Bool, templateFilePath: String?, useSingleFile: Bool, version: String) {
         
-        let featuresCode = features.map { swiftCodeGenerator.generateSwiftTestCode(forFeature: $0.feature, generatedClassType: generatedClassType, templateFilePath: templateFilePath, disableSwiftLint: disableSwiftLint, version: version) }
+        let featuresCode = metadatas.map { swiftCodeGenerator.generateSwiftTestCode(forFeature: $0.feature, generatedClassType: generatedClassType, templateFilePath: templateFilePath, disableSwiftLint: disableSwiftLint, version: version) }
         
         if useSingleFile {
             writeSingleFile(fromFeaturesCode: featuresCode, folderPath: folderPath)
         }
         else {
-            writeFeatureFiles(fromFeaturesCode: featuresCode, metadatas: features, folderPath: folderPath)
+            writeFeatureFiles(fromFeaturesCode: featuresCode, metadatas: metadatas, folderPath: folderPath)
         }
     }
     
@@ -40,9 +40,8 @@ public final class SwiftTestsFilesWriter {
     }
     
     private func writeFeatureFiles(fromFeaturesCode featuresCode: [String], metadatas: [Metadata], folderPath: String) {
-        for i in 0..<metadatas.count {
-            let code = featuresCode[i]
-            let metadata = metadatas[i]
+        for (index, metadata) in metadatas.enumerated() {
+            let code = featuresCode[index]
             
             let fileName = metadata.fileName
             let output = metadata.path

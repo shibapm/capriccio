@@ -91,7 +91,7 @@ public final class FeatureFilesReader {
         let words = pathName.split(separator: " ")
         let filteredWords = Array(NSOrderedSet(array: words)) as? [String.SubSequence]
         
-        let name = filteredWords?.compactMap { word in
+        let name = filteredWords?.map { word in
             return word.prefix(1).uppercased() + word.dropFirst()
             }.joined(separator: "_")
         
