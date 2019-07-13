@@ -17,7 +17,8 @@ let package = Package(
         .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
         .package(url: "https://github.com/Quick/Nimble", from: "8.0.0"), // dev
         .package(url: "https://github.com/f-meloni/TestSpy", from: "0.4.0"), // dev
-        .package(url: "https://github.com/shibapm/Rocket", from: "0.9.0") // dev
+        .package(url: "https://github.com/shibapm/Rocket", from: "0.9.0"), // dev
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.5.0") // dev
     ],
     targets: [
         .target(
@@ -26,9 +27,7 @@ let package = Package(
         .target(
             name: "Capriccio",
             dependencies: ["CapriccioLib", "Utility", "Yams"]),
-        .testTarget(
-            name: "CapriccioLibTests",
-            dependencies: ["CapriccioLib", "Nimble", "TestSpy"])
+        .testTarget(name: "CapriccioLibTests",dependencies: ["CapriccioLib", "Nimble", "TestSpy", "SnapshotTesting"]) // dev
     ],
     swiftLanguageVersions: [.v5]
 )

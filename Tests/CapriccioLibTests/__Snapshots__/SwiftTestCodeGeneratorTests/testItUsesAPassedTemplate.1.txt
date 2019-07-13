@@ -1,0 +1,12 @@
+import Lib1
+import Lib2
+
+final class FeatureNumberOne: XCTestCase {
+
+    func testScenario_ScenarioIWantToTest() {
+        
+        step_ImInASituation()
+        step_SomethingHappens()
+        step_SomethingElseHappens()
+    }
+}
