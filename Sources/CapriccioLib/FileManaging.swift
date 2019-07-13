@@ -9,8 +9,7 @@ import Foundation
 
 public protocol FileManaging {
     func contentsOfDirectory(atPath path: String) throws -> [String]
+    func subpathsOfDirectory(atPath: String) throws -> [String]
 }
 
 extension FileManager: FileManaging {}
-
-

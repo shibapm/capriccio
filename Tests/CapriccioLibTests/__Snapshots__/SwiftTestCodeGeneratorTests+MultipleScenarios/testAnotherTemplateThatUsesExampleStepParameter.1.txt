@@ -19,7 +19,7 @@ class NumberOneFeatureTest: XCTestCase {
     
     
     
-    func testScenario_IWantAComplexTest_TestaAndSituationa() {
+    func testScenario_IWantAComplexTest_TestAAndSituationA() {
         
         stepDefiner.stepImInASituation()
         
@@ -29,7 +29,7 @@ class NumberOneFeatureTest: XCTestCase {
         
     }
     
-    func testScenario_IWantAComplexTest_TestbAndSituationb() {
+    func testScenario_IWantAComplexTest_TestBAndSituationB() {
         
         stepDefiner.stepImInASituation()
         

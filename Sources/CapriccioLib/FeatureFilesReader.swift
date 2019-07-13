@@ -8,34 +8,46 @@
 import Foundation
 import Gherkin
 
+public struct Metadata {
+    let fileName: String
+    let path: String
+    let feature: Feature
+}
+
 public final class FeatureFilesReader {
     public init() { }
     
-    public func readFiles(atPaths paths: [String], includedTags: [String]?, excludedTags: [String]?) -> [Feature] {
-        let fileNames = paths.compactMap(getFileName)
-        let filesContent = paths.compactMap { try? String(contentsOfFile: $0).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
+    public func readFiles(sourcePath: String, atPaths paths: [String], includedTags: [String]?, excludedTags: [String]?) -> [Metadata] {
+        let metadata = paths.map(fileMetadata)
         
-        let newText: [String] = trimLines(from: filesContent)
-        let gherkinFeatures = newText.compactMap { try? Gherkin.Feature($0) }
-        var features = gherkinFeatures.compactMap(Feature.init)
+        let filesContent = paths.compactMap { try? String(contentsOfFile: sourcePath + "/" + $0).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
+        let texts: [String] = trimLines(from: filesContent)
         
-        for i in 0..<fileNames.count {
-            features[i] = features[i].withFileName(fileNames[i])
+        let textAndMetadata = zip(texts, metadata)
+        let metadatas = textAndMetadata.compactMap { (text, metadata) -> Metadata? in
+            guard let gherkinFeature = try? Gherkin.Feature(text) else {
+                print("Unable to parse the file: \(metadata.name) at \(metadata.path)")
+                return nil
+            }
+            
+            let feature = Feature(gherkinFeature: gherkinFeature)
+            let metadata = Metadata(fileName: metadata.name, path: metadata.path, feature: feature)
+            return metadata
         }
         
         if includedTags != nil || excludedTags != nil {
             let includedTag = includedTags?.compactMap(Tag.init) ?? []
             let excludedTag = excludedTags?.compactMap(Tag.init) ?? []
             
-            return filterFeatures(features: features, includedTags: includedTag, excludedTags: excludedTag)
+            return filterFeatures(metadatas: metadatas, includedTags: includedTag, excludedTags: excludedTag)
         } else {
-            return features
+            return metadatas
         }
     }
     
-    private func filterFeatures(features: [Feature], includedTags: [Tag], excludedTags: [Tag]) -> [Feature] {
-        return features.compactMap { feature -> Feature? in
-            let scenarios = feature.scenarios.filter { scenario in
+    private func filterFeatures(metadatas: [Metadata], includedTags: [Tag], excludedTags: [Tag]) -> [Metadata] {
+        return metadatas.compactMap { metadata -> Metadata? in
+            let scenarios = metadata.feature.scenarios.filter { scenario in
                 let tags = scenario.tags
                 
                 let includedTagsCheck = includedTags.isEmpty || tags.contains(where: includedTags.contains)
@@ -44,11 +56,16 @@ public final class FeatureFilesReader {
                 return includedTagsCheck && excludedTagsCheck
             }
             
-            return scenarios.count == 0 ?  nil : Feature(fileName: feature.fileName,
-                                                         description: feature.description,
-                                                         name: feature.name,
-                                                         scenarios: scenarios,
-                                                         tags: feature.tags)
+            guard scenarios.count != 0 else {
+                return nil
+            }
+            
+            let feature = Feature(description: metadata.feature.description,
+                                  name: metadata.feature.name,
+                                  scenarios: scenarios,
+                                  tags: metadata.feature.tags)
+            
+            return Metadata(fileName: metadata.fileName, path: metadata.path, feature: feature)
         }
     }
     
@@ -67,16 +84,21 @@ public final class FeatureFilesReader {
         }
     }
     
-    private func getFileName(from path: String) -> String? {
-        if let regex = try? NSRegularExpression(pattern: "\\s?/[\\w\\s]*\\.feature", options: .caseInsensitive)
-        {
-            let string = path as NSString
-            let fileName = regex.matches(in: path, options: [], range: NSRange(location: 0, length: string.length)).map {
-                string.substring(with: $0.range).replacingOccurrences(of: ".feature", with: "").replacingOccurrences(of: "/", with: "").validEntityName()
-            }
-            
-            return fileName.first
+    private func fileMetadata(from path: String) -> (name: String, path: String) {
+        let pathName = path.replacingOccurrences(of: ".feature", with: "").replacingOccurrences(of: "/", with: " ")
+        let outputPath = path.components(separatedBy: "/").dropLast().joined(separator: "/") + "/"
+        
+        let words = pathName.split(separator: " ")
+        let filteredWords = Array(NSOrderedSet(array: words)) as? [String.SubSequence]
+        
+        let name = filteredWords?.map { word in
+            return word.prefix(1).uppercased() + word.dropFirst()
+            }.joined(separator: "_")
+        
+        guard let fileName = name else {
+            return (name: words.joined(separator: "_"), path: outputPath)
         }
-        return nil
+        
+        return (name: fileName, path: outputPath)
     }
 }
