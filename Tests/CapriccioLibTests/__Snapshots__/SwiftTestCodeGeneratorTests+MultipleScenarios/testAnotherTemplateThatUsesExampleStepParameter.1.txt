@@ -1,0 +1,44 @@
+import XCTest
+
+/**
+Feature:
+Number one
+*/
+
+class NumberOneFeatureTest: XCTestCase {
+    
+    
+    func testScenario_IWantASimpleTest() {
+        
+        stepDefiner.stepImInASituation()
+        
+        stepDefiner.stepSomethingHappens()
+        
+    }
+    
+    
+    
+    
+    func testScenario_IWantAComplexTest_TestAAndSituationA() {
+        
+        stepDefiner.stepImInASituation()
+        
+        stepDefiner.stepSomethingHappens(a: "testA")
+        
+        stepDefiner.stepJustHappened(b: "situationA")
+        
+    }
+    
+    func testScenario_IWantAComplexTest_TestBAndSituationB() {
+        
+        stepDefiner.stepImInASituation()
+        
+        stepDefiner.stepSomethingHappens(a: "testB")
+        
+        stepDefiner.stepJustHappened(b: "situationB")
+        
+    }
+    
+    
+    
+}
