@@ -31,3 +31,15 @@ let package = Package(
     ],
     swiftLanguageVersions: [.v5]
 )
+
+#if canImport(PackageConfig)
+import PackageConfig
+
+let config = PackageConfiguration([
+    "rocket": [
+        "before": [
+            "scripts/update_version.sh"
+        ],
+    ],
+    ]).write()
+#endif
