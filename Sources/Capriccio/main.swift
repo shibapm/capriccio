@@ -9,7 +9,7 @@ import Foundation
 import SPMUtility
 import CapriccioLib
 
-let capriccioVersion = "1.0.0"
+let capriccioVersion = "1.1.0"
 
 let filesFetcher = FeatureFilesFetcher()
 
