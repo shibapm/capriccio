@@ -14,7 +14,8 @@ let filesFetcher = FeatureFilesFetcher()
 
 var arguments: CapriccioArguments
 if let yamlPath = filesFetcher.yamlFile(),
-    !CommandLine.arguments.contains("--help") {
+    !CommandLine.arguments.contains("--help") &&
+    !CommandLine.arguments.contains("--version") {
     Runner.run(with: CapriccioArgumentsParser.parseArguments(yaml: yamlPath), filesFetcher: filesFetcher)
 } else {
     ArgumentsRunner.main()

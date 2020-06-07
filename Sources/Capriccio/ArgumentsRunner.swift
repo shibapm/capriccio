@@ -8,6 +8,17 @@
 import ArgumentParser
 
 struct ArgumentsRunner: ParsableCommand {
+    static var configuration: CommandConfiguration {
+        CommandConfiguration(commandName: "capriccio",
+                             abstract: "Tool to generate UI Tests from gherkins .feature files.",
+                             discussion: "Instead of CLI arguments you can use .capriccio.yml configuration file",
+                             version: capriccioVersion,
+                             shouldDisplay: true,
+                             subcommands: [],
+                             defaultSubcommand: nil,
+                             helpNames: [.short, .long])
+    }
+    
     @Argument(help: "The path to the folder that contains the feature files")
     var source: String
     @Argument(help: "The path to the folder where the swift files will be generated")
