@@ -11,7 +11,7 @@ let package = Package(
             targets: ["Capriccio"])
     ],
     dependencies: [
-        .package(url: "https://github.com/FelipeDocil/SwiftGherkin", .branch("support_comments")),
+        .package(url: "https://github.com/iainsmith/SwiftGherkin", .exact("0.2.0")),
         .package(url: "https://github.com/stencilproject/Stencil", .exact("0.13.1")),
         .package(url: "https://github.com/apple/swift-argument-parser", .exact("0.1.0")),
         .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
