@@ -11,9 +11,9 @@ let package = Package(
             targets: ["Capriccio"])
     ],
     dependencies: [
-        .package(url: "https://github.com/FelipeDocil/SwiftGherkin", .branch("support_comments")),
+        .package(url: "https://github.com/iainsmith/SwiftGherkin", .exact("0.2.0")),
         .package(url: "https://github.com/stencilproject/Stencil", .exact("0.13.1")),
-        .package(url: "https://github.com/apple/swift-package-manager.git", .exact("0.4.0")),
+        .package(url: "https://github.com/apple/swift-argument-parser", .exact("0.1.0")),
         .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
         .package(url: "https://github.com/Quick/Nimble", from: "8.0.0"), // dev
         .package(url: "https://github.com/f-meloni/TestSpy", from: "0.4.0"), // dev
@@ -26,7 +26,7 @@ let package = Package(
             dependencies: ["Gherkin", "Stencil"]),
         .target(
             name: "Capriccio",
-            dependencies: ["CapriccioLib", "SwiftPM", "Yams"]),
+            dependencies: ["CapriccioLib", "ArgumentParser", "Yams"]),
         .testTarget(name: "CapriccioLibTests",dependencies: ["CapriccioLib", "Nimble", "TestSpy", "SnapshotTesting"]) // dev
     ],
     swiftLanguageVersions: [.v5]
