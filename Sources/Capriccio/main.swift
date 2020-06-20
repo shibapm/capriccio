@@ -8,7 +8,7 @@
 import Foundation
 import CapriccioLib
 
-let capriccioVersion = "1.1.0"
+let capriccioVersion = "1.2.0"
 
 let filesFetcher = FeatureFilesFetcher()
 

@@ -102,11 +102,11 @@
       },
       {
         "package": "Gherkin",
-        "repositoryURL": "https://github.com/FelipeDocil/SwiftGherkin",
+        "repositoryURL": "https://github.com/iainsmith/SwiftGherkin",
         "state": {
-          "branch": "support_comments",
-          "revision": "2cd9d17ffd520370b5591e724e70098f7a21f2dc",
-          "version": null
+          "branch": null,
+          "revision": "61857fedfa2818986c56f56553754f7759a6e96e",
+          "version": "0.2.0"
         }
       },
       {
