@@ -125,7 +125,7 @@ public struct Example: Encodable, Equatable {
         let sortedDictionary = values.sorted(by: {$0.0 < $1.0 })
         for (key, value) in sortedDictionary {
             if step.description.contains("<\(key)>") {
-                text = step.description.replacingOccurrences(of: "<\(key)>", with: value)
+                text = text.description.replacingOccurrences(of: "<\(key)>", with: value)
                 parameters.append(Parameter(key: key, value: value))
             }
         }
